@@ -1,0 +1,107 @@
+import {defineType, defineField} from 'sanity'
+
+export default defineType({
+  name: 'project',
+  title: 'Project',
+  type: 'document',
+  groups: [
+    {name: 'content', title: 'Content'},
+    {name: 'media', title: 'Media'},
+    {name: 'settings', title: 'Settings'},
+  ],
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Project Title',
+      type: 'string',
+      group: 'content',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      group: 'content',
+      options: {source: 'title', maxLength: 96},
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'studio',
+      title: 'Studio / Practice',
+      type: 'string',
+      group: 'content',
+      description: 'e.g. Studio XYZ',
+    }),
+    defineField({
+      name: 'location',
+      title: 'Location',
+      type: 'string',
+      group: 'content',
+      description: 'e.g. Kozhikode / Kerala',
+    }),
+    defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      group: 'content',
+      options: {
+        list: ['Residential', 'Institutional', 'Hospitality', 'Commercial', 'Interior', 'Landscape'],
+        layout: 'dropdown',
+      },
+    }),
+    defineField({
+      name: 'area',
+      title: 'Area',
+      type: 'string',
+      group: 'content',
+      description: 'e.g. 2,400 sq.ft.',
+    }),
+    defineField({
+      name: 'year',
+      title: 'Year Completed',
+      type: 'number',
+      group: 'content',
+    }),
+    defineField({
+      name: 'mainImage',
+      title: 'Main / Hero Image',
+      type: 'image',
+      group: 'media',
+      options: {hotspot: true},
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'Gallery',
+      type: 'array',
+      group: 'media',
+      of: [{type: 'image', options: {hotspot: true}}],
+    }),
+    defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'array',
+      group: 'content',
+      of: [{type: 'block'}],
+    }),
+    defineField({
+      name: 'isFeatured',
+      title: 'Show in Featured Projects',
+      type: 'boolean',
+      group: 'settings',
+      initialValue: false,
+      description: 'Toggle on to surface this project in the homepage Featured Projects section.',
+    }),
+    defineField({
+      name: 'showInLatestStories',
+      title: 'Show in Latest Stories',
+      type: 'boolean',
+      group: 'settings',
+      initialValue: false,
+      description: 'Toggle on to surface this project in the homepage Latest Stories section and the Stories page.',
+    }),
+  ],
+  preview: {
+    select: {title: 'title', subtitle: 'studio', media: 'mainImage'},
+  },
+})
