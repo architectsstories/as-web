@@ -6,7 +6,5 @@ export default defineCliConfig({
     dataset: 'production',
   },
 
-  deployment: {
-    appId: 'w5zd3yl10cxkgef37uvw045p',
-  },
+  studioHost: 'architects-stories',
 })
