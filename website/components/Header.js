@@ -51,7 +51,7 @@ export default function Header() {
               ⌕ Search
             </button>
           </form>
-          <Link className="nav-btn-outline" href="/submit">Get Featured</Link>
+          <Link className="nav-btn-outline" href="/submit">Feature</Link>
           <Link className="nav-cta" href="/join">Join Community</Link>
           <button
             className={`nav-burger${mobileOpen ? ' open' : ''}`}
@@ -73,7 +73,7 @@ export default function Header() {
             <Link href="/learn" onClick={() => setMobileOpen(false)}>Learn</Link>
             <Link href="/community" onClick={() => setMobileOpen(false)}>Community</Link>
           </nav>
-          <Link className="nav-btn-outline mobile-feature" href="/submit" onClick={() => setMobileOpen(false)}>Get Featured</Link>
+          <Link className="nav-btn-outline mobile-feature" href="/submit" onClick={() => setMobileOpen(false)}>Feature</Link>
         </div>
       )}
     </header>
