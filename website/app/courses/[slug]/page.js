@@ -3,6 +3,7 @@ import { PortableText } from '@portabletext/react'
 import { client } from '../../../lib/sanity'
 import { urlFor } from '../../../lib/image'
 import { courseBySlugQuery } from '../../../lib/queries'
+import { formatRole } from '../../../lib/formatRole'
 
 export const revalidate = 60
 
@@ -88,7 +89,7 @@ export default async function CourseDetailPage({ params }) {
           <div>
             <h4 style={{fontSize: 16}}>{course.instructor.name}</h4>
             <div style={{fontSize: 13, color: 'var(--grey)', marginTop: 4}}>
-              {course.instructor.role}{course.instructor.location ? ` — ${course.instructor.location}` : ''}
+              {formatRole(course.instructor)}{course.instructor.location ? ` — ${course.instructor.location}` : ''}
             </div>
             {course.instructor.bio && (
               <p style={{fontSize: 13, color: 'var(--grey)', marginTop: 10, maxWidth: '52ch', lineHeight: 1.55}}>

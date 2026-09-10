@@ -10,7 +10,7 @@ export const homepageQuery = `*[_type == "featured"][0]{
   featuredProjects[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
   "latestProjects": latestStories[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
   featuredCourses[]->{title, "slug": slug.current, category, thumbnail, price, isFree, instructor->{name}},
-  featuredPeople[]->{name, role, location, photo}
+  featuredPeople[]->{name, role, roleSecondary, roleCustom, location, photo}
 }`
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -23,6 +23,16 @@ export const allProjectsQuery = `*[_type == "project"] | order(year desc){
 
 export const projectBySlugQuery = `*[_type == "project" && slug.current == $slug][0]{
   title, studio, location, category, area, year, mainImage, gallery, description
+}`
+
+// Auto-ranked by page views (Project.viewCount) — no manual curation.
+export const popularProjectsQuery = `*[_type == "project"] | order(viewCount desc, _createdAt desc)[0...10]{
+  title, "slug": slug.current, studio, location, category, area, year, mainImage, description, _createdAt
+}`
+
+// Auto-sorted by publish date, newest first — no manual curation.
+export const recentProjectsQuery = `*[_type == "project"] | order(_createdAt desc)[0...8]{
+  title, "slug": slug.current, studio, location, category, area, year, mainImage, description, _createdAt
 }`
 
 // "Stories" on the website is powered by Projects with "Show in Latest
@@ -42,7 +52,7 @@ export const allCoursesQuery = `*[_type == "course"] | order(_createdAt desc){
 
 export const courseBySlugQuery = `*[_type == "course" && slug.current == $slug][0]{
   title, category, thumbnail, bannerImage, price, isFree, level, duration, description, outcomes, curriculum, ctaText, ctaLink,
-  instructor->{name, role, location, photo, bio, portfolioUrl}
+  instructor->{name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl}
 }`
 
 export const upcomingEventsQuery = `*[_type == "event" && startDateTime >= now()] | order(startDateTime asc){
@@ -54,9 +64,9 @@ export const pastEventsQuery = `*[_type == "event" && startDateTime < now()] | o
 }`
 
 export const allPeopleQuery = `*[_type == "person"] | order(name asc){
-  name, "slug": slug.current, role, category, location, photo
+  name, "slug": slug.current, role, roleSecondary, roleCustom, location, photo
 }`
 
 export const personBySlugQuery = `*[_type == "person" && slug.current == $slug][0]{
-  name, role, category, location, photo, bio, portfolioUrl
+  name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl
 }`

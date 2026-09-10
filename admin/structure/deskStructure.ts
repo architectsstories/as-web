@@ -34,6 +34,26 @@ export const deskStructure: StructureResolver = (S) =>
 
       S.divider(),
 
+      S.listItem()
+        .title('Join Applications')
+        .schemaType('joinApplication')
+        .child(
+          S.documentTypeList('joinApplication')
+            .title('Join Applications')
+            .defaultOrdering([{field: 'submittedAt', direction: 'desc'}])
+        ),
+
+      S.listItem()
+        .title('Work Submissions')
+        .schemaType('submission')
+        .child(
+          S.documentTypeList('submission')
+            .title('Work Submissions')
+            .defaultOrdering([{field: 'submittedAt', direction: 'desc'}])
+        ),
+
+      S.divider(),
+
       // Singleton: only one "Featured" document ever exists
       S.listItem()
         .title('Featured (Homepage)')

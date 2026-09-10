@@ -1,13 +1,24 @@
 import Link from 'next/link'
 import { client } from '../lib/sanity'
 import { urlFor } from '../lib/image'
-import { homepageQuery } from '../lib/queries'
+import { homepageQuery, popularProjectsQuery, recentProjectsQuery } from '../lib/queries'
+import { formatRole } from '../lib/formatRole'
+import { excerptFromBlocks } from '../lib/excerpt'
 import HeroCarousel from '../components/HeroCarousel'
+import PopularPostsScroller from '../components/PopularPostsScroller'
+import PublicationCard from '../components/PublicationCard'
 
 export const revalidate = 60 // re-fetch from Sanity at most once a minute
 
 export default async function HomePage() {
-  const data = await client.fetch(homepageQuery)
+  const [data, popularRaw, recentRaw] = await Promise.all([
+    client.fetch(homepageQuery),
+    client.fetch(popularProjectsQuery),
+    client.fetch(recentProjectsQuery),
+  ])
+
+  const popularPosts = popularRaw.map((p) => ({ ...p, excerpt: excerptFromBlocks(p.description) }))
+  const recentPosts = recentRaw.map((p) => ({ ...p, excerpt: excerptFromBlocks(p.description) }))
 
   const heroSlides = data?.heroSlides || []
   const projects = data?.featuredProjects || []
@@ -140,11 +151,40 @@ export default async function HomePage() {
             <div className="submit-box">
               <h3>Your work<br />deserves a story<span className="red">.</span></h3>
               <p>Have a project, idea or practice worth sharing?</p>
-              <a className="go" href="#">Submit Your Work →</a>
+              <Link className="go" href="/submit">Submit Your Work →</Link>
             </div>
           </div>
         </div>
       </section>
+
+      {/* POPULAR POSTS — auto-ranked by project page views, no curation needed */}
+      {popularPosts.length > 0 && (
+        <section id="popular">
+          <div className="wrap">
+            <PopularPostsScroller posts={popularPosts} />
+          </div>
+        </section>
+      )}
+
+      {/* RECENTLY PUBLISHED — auto-sorted by publish date, newest first, no curation needed */}
+      {recentPosts.length > 0 && (
+        <section id="recent" style={{background: 'var(--off)'}}>
+          <div className="wrap">
+            <div className="section-head">
+              <div>
+                <div className="eyebrow-dot"><span className="dot" /><h2>Recently Published</h2></div>
+                <p className="section-lede">Fresh off the press — newest projects first.</p>
+              </div>
+              <Link className="view-all" href="/projects">View all</Link>
+            </div>
+            <div className="pub-grid-4">
+              {recentPosts.map((p) => (
+                <PublicationCard key={p.slug} post={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* PEOPLE */}
       <section id="community">
@@ -162,7 +202,7 @@ export default async function HomePage() {
                     {p.photo && <img src={urlFor(p.photo).width(500).height(525).url()} alt={p.name} />}
                   </div>
                   <h4>{p.name}</h4>
-                  <p className="role">{p.role}</p>
+                  <p className="role">{formatRole(p)}</p>
                   <p className="loc">{p.location}</p>
                 </div>
               ))}
@@ -172,7 +212,7 @@ export default async function HomePage() {
       </section>
 
       {/* LEARN WITH AS */}
-      <section id="learn" style={{background: 'var(--off)'}}>
+      <section id="learn" style={{background: 'var(--black)'}}>
         <div className="wrap">
           <div className="section-head">
             <div>

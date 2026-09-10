@@ -1,7 +1,22 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default function Header() {
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [query, setQuery] = useState('')
+  const router = useRouter()
+
+  function handleSearchSubmit(e) {
+    e.preventDefault()
+    if (query.trim()) {
+      router.push(`/community?q=${encodeURIComponent(query.trim())}`)
+    }
+  }
+
   return (
     <header>
       <div className="nav">
@@ -15,9 +30,28 @@ export default function Header() {
           <Link href="/community">Community</Link>
         </nav>
         <div className="nav-right">
-          <span className="nav-search">⌕ Search</span>
-          <Link href="/#find">Submit</Link>
-          <Link className="nav-cta" href="/#find">Join AS</Link>
+          <form className={`nav-search-wrap${searchOpen ? ' open' : ''}`} onSubmit={handleSearchSubmit}>
+            {searchOpen && (
+              <input
+                type="text"
+                autoFocus
+                placeholder="Search…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onBlur={() => { if (!query) setSearchOpen(false) }}
+              />
+            )}
+            <button
+              type={searchOpen ? 'submit' : 'button'}
+              className="nav-search"
+              onClick={() => { if (!searchOpen) setSearchOpen(true) }}
+              aria-label="Search"
+            >
+              ⌕ Search
+            </button>
+          </form>
+          <Link className="nav-btn-outline" href="/submit">Feature</Link>
+          <Link className="nav-cta" href="/join">Join Community</Link>
         </div>
       </div>
     </header>

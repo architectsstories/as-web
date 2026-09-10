@@ -4,5 +4,7 @@ import event from './event'
 import person from './person'
 import featured from './featured'
 import siteSettings from './siteSettings'
+import joinApplication from './joinApplication'
+import submission from './submission'
 
-export const schemaTypes = [project, course, event, person, featured, siteSettings]
+export const schemaTypes = [project, course, event, person, featured, siteSettings, joinApplication, submission]

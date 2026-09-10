@@ -100,6 +100,15 @@ export default defineType({
       initialValue: false,
       description: 'Toggle on to surface this project in the homepage Latest Stories section and the Stories page.',
     }),
+    defineField({
+      name: 'viewCount',
+      title: 'View Count',
+      type: 'number',
+      group: 'settings',
+      initialValue: 0,
+      readOnly: true,
+      description: 'Automatically increases each time someone opens this project\u2019s page. Powers the homepage "Popular Posts" section \u2014 nothing to set manually here.',
+    }),
   ],
   preview: {
     select: {title: 'title', subtitle: 'studio', media: 'mainImage'},

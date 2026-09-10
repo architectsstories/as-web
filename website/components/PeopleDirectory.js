@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { urlFor } from '../lib/image'
+import { formatRole } from '../lib/formatRole'
+import { personCategory } from '../lib/roleToCategory'
 
 const CATEGORIES = ['Architects', 'Designers', 'Studios', 'Makers', 'Mentors', 'Material Brands']
 
@@ -17,12 +19,13 @@ export default function PeopleDirectory({ people, initialQuery = '', initialLoca
   )
 
   const filtered = people.filter((p) => {
+    const roleLabel = formatRole(p).toLowerCase()
     const matchesQuery =
       !query ||
       p.name?.toLowerCase().includes(query.toLowerCase()) ||
-      p.role?.toLowerCase().includes(query.toLowerCase())
+      roleLabel.includes(query.toLowerCase())
     const matchesLocation = !location || p.location === location
-    const matchesCategory = !category || p.category === category
+    const matchesCategory = !category || personCategory(p) === category
     return matchesQuery && matchesLocation && matchesCategory
   })
 
@@ -68,7 +71,7 @@ export default function PeopleDirectory({ people, initialQuery = '', initialLoca
                 {p.photo && <img src={urlFor(p.photo).width(400).height(420).url()} alt={p.name} />}
               </div>
               <h4>{p.name}</h4>
-              {p.role && <div className="role">{p.role}</div>}
+              {formatRole(p) && <div className="role">{formatRole(p)}</div>}
               {p.location && <div className="loc">{p.location}</div>}
             </Link>
           ))}

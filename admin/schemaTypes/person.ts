@@ -20,26 +20,29 @@ export default defineType({
     }),
     defineField({
       name: 'role',
-      title: 'Role',
+      title: 'Role — Primary',
       type: 'string',
-      description: 'e.g. Architect, Designer, Visualization Lead',
+      description: 'Required. Main role shown for this person.',
+      options: {
+        list: ['Architect', 'Designer', 'Studio', 'Maker', 'Mentor', 'Material Brand', 'Student', 'Other'],
+      },
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
+      name: 'roleSecondary',
+      title: 'Role — Secondary',
       type: 'string',
-      description: 'Used to power the "Find your people" search and filter tabs on the homepage.',
+      description: 'Optional. Pick a second role if this person fits more than one.',
       options: {
-        list: [
-          {title: 'Architects', value: 'Architects'},
-          {title: 'Designers', value: 'Designers'},
-          {title: 'Studios', value: 'Studios'},
-          {title: 'Makers', value: 'Makers'},
-          {title: 'Mentors', value: 'Mentors'},
-          {title: 'Material Brands', value: 'Material Brands'},
-        ],
-        layout: 'dropdown',
+        list: ['Architect', 'Designer', 'Studio', 'Maker', 'Mentor', 'Material Brand', 'Student', 'Other'],
       },
+    }),
+    defineField({
+      name: 'roleCustom',
+      title: 'Role — Custom (short)',
+      type: 'string',
+      description: 'Optional. Type a short custom role if the list above doesn\u2019t fit (e.g. "Urban Planner"). Shown together with the primary/secondary roles above, e.g. "Architect / Mentor / Urban Planner".',
+      validation: (Rule) => Rule.max(30).warning('Keep this short — under 30 characters.'),
     }),
     defineField({
       name: 'location',
@@ -65,6 +68,10 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'name', subtitle: 'role', media: 'photo'},
+    select: {title: 'name', role: 'role', roleSecondary: 'roleSecondary', roleCustom: 'roleCustom', media: 'photo'},
+    prepare({title, role, roleSecondary, roleCustom, media}) {
+      const subtitle = roleCustom || [role, roleSecondary].filter(Boolean).join(' / ')
+      return {title, subtitle, media}
+    },
   },
 })

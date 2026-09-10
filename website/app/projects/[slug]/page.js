@@ -3,6 +3,7 @@ import { PortableText } from '@portabletext/react'
 import { client } from '../../../lib/sanity'
 import { urlFor } from '../../../lib/image'
 import { projectBySlugQuery } from '../../../lib/queries'
+import TrackProjectView from '../../../components/TrackProjectView'
 
 export const revalidate = 60
 
@@ -19,6 +20,7 @@ export default async function ProjectDetailPage({ params }) {
 
   return (
     <div className="wrap">
+      <TrackProjectView slug={params.slug} />
       <div className="crumb">
         <Link href="/">Home</Link><span>/</span>
         <Link href="/projects">Projects</Link><span>/</span>
