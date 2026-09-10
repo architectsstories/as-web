@@ -22,7 +22,7 @@ export default function Header() {
     <header>
       <div className="nav">
         <Link href="/" className="logo">
-          <Image src="/logo.png" alt="Architects Stories" width={160} height={54} className="logo-img" priority />
+          <Image src="/logo.png" alt="Architects Stories" width={160} height={54} style={{height: 38, width: 'auto'}} priority />
         </Link>
         <nav className="links">
           <Link href="/#stories">Stories</Link>
@@ -73,6 +73,7 @@ export default function Header() {
             <Link href="/learn" onClick={() => setMobileOpen(false)}>Learn</Link>
             <Link href="/community" onClick={() => setMobileOpen(false)}>Community</Link>
           </nav>
+          <Link className="nav-btn-outline mobile-feature" href="/submit" onClick={() => setMobileOpen(false)}>Get Featured</Link>
         </div>
       )}
     </header>
