@@ -8,6 +8,7 @@ import Image from 'next/image'
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
+  const [mobileOpen, setMobileOpen] = useState(false)
   const router = useRouter()
 
   function handleSearchSubmit(e) {
@@ -21,7 +22,7 @@ export default function Header() {
     <header>
       <div className="nav">
         <Link href="/" className="logo">
-          <Image src="/logo.png" alt="Architects Stories" width={160} height={54} style={{height: 38, width: 'auto'}} priority />
+          <Image src="/logo.png" alt="Architects Stories" width={160} height={54} className="logo-img" priority />
         </Link>
         <nav className="links">
           <Link href="/#stories">Stories</Link>
@@ -50,10 +51,31 @@ export default function Header() {
               ⌕ Search
             </button>
           </form>
-          <Link className="nav-btn-outline" href="/submit">Feature</Link>
-          <Link className="nav-cta" href="/join">Join Community</Link>
+          <Link className="nav-btn-outline" href="/submit">Get Featured</Link>
+          <Link className="nav-cta nav-cta-desktop" href="/join">Join Community</Link>
+          <button
+            className={`nav-burger${mobileOpen ? ' open' : ''}`}
+            aria-label="Menu"
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
       </div>
+      {mobileOpen && (
+        <div className="mobile-menu">
+          <nav className="mobile-links">
+            <Link href="/#stories" onClick={() => setMobileOpen(false)}>Stories</Link>
+            <Link href="/projects" onClick={() => setMobileOpen(false)}>Projects</Link>
+            <Link href="/learn" onClick={() => setMobileOpen(false)}>Learn</Link>
+            <Link href="/community" onClick={() => setMobileOpen(false)}>Community</Link>
+          </nav>
+          <Link className="nav-cta mobile-join" href="/join" onClick={() => setMobileOpen(false)}>Join Community</Link>
+        </div>
+      )}
     </header>
   )
 }
