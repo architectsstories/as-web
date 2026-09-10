@@ -62,16 +62,14 @@ nav.links a:hover::after{right:0;}
 @media(max-width:480px){
   .nav{padding:14px 16px;gap:8px;}
   .nav-right{gap:6px;}
-  .nav-btn-outline{font-size:10.5px;padding:6px 9px;}
-  .nav-cta{font-size:10.5px;padding:6px 10px;}
+  .nav-btn-outline,.nav-cta{display:inline-flex;align-items:center;justify-content:center;height:38px;box-sizing:border-box;font-size:11px;padding:0 12px;}
   .nav-burger{width:18px;height:16px;}
   .mobile-menu{padding:10px 16px 20px;}
 }
 @media(max-width:360px){
   .nav{gap:6px;}
   .nav-right{gap:5px;}
-  .nav-btn-outline{font-size:10px;padding:5px 8px;}
-  .nav-cta{font-size:10px;padding:5px 8px;}
+  .nav-btn-outline,.nav-cta{height:36px;font-size:10.5px;padding:0 9px;}
 }
 
 /* ---------- section heads ---------- */
