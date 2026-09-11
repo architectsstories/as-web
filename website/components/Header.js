@@ -73,7 +73,7 @@ export default function Header() {
             <Link href="/learn" onClick={() => setMobileOpen(false)}>Learn</Link>
             <Link href="/community" onClick={() => setMobileOpen(false)}>Community</Link>
           </nav>
-          <Link className="nav-btn-outline mobile-feature" href="/submit" onClick={() => setMobileOpen(false)}>Get Featured</Link>
+          <Link className="nav-cta mobile-cta" href="/join" onClick={() => setMobileOpen(false)}>Join Community</Link>
         </div>
       )}
     </header>

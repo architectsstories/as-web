@@ -26,14 +26,21 @@ export default function SubmitPage({ searchParams }) {
 
           <aside className="submit-sidebar">
             <div className="submit-sidebar-card">
-              <h4>Price Cheat-Sheet</h4>
-              <ul className="submit-price-list">
-                <li><span>Essential</span><span className="submit-price-free">Free</span></li>
-                <li><span>Studio</span><span>₹12,000</span></li>
-                <li><span>Showcase</span><span>₹20,000</span></li>
-                <li><span>Signature</span><span>₹35,000</span></li>
+              <h4>What's Included (Free)</h4>
+              <ul className="submit-terms-mini">
+                <li>Website feature</li>
+                <li>1 Instagram carousel post (6–10 images)</li>
+                <li>Full credits and tagging</li>
+                <li>1 story share, added to highlights</li>
               </ul>
-              <Link href="/plans" className="submit-sidebar-link">View full plans →</Link>
+            </div>
+
+            <div className="submit-sidebar-card">
+              <h4>Don't Have Photography Yet?</h4>
+              <p style={{fontSize: 13, color: 'var(--grey)', lineHeight: 1.6, marginBottom: 14}}>
+                No problem — we can shoot it for you as a separate paid service.
+              </p>
+              <Link href="/plans#photography" className="submit-sidebar-link">Get Photography Plans →</Link>
             </div>
 
             <div className="submit-sidebar-card">
@@ -41,16 +48,6 @@ export default function SubmitPage({ searchParams }) {
               <div className="submit-contact"><b>Naseef VP</b>Founder, Architects Stories</div>
               <div className="submit-contact"><b>+91 97444 12828</b>Call or WhatsApp</div>
               <div className="submit-contact"><b>architectsstories@gmail.com</b>Email</div>
-            </div>
-
-            <div className="submit-sidebar-card">
-              <h4>Before You Submit</h4>
-              <ul className="submit-terms-mini">
-                <li>50% advance confirms the booking</li>
-                <li>Full credits (architect, photographer, collaborators) are required</li>
-                <li>Drive link sharing must be set to "Anyone with the link"</li>
-                <li>We'll respond within 3–5 working days</li>
-              </ul>
             </div>
           </aside>
         </div>

@@ -5,10 +5,7 @@ import { useState } from 'react'
 const PROJECT_TYPES = ['Residential', 'Commercial', 'Hospitality', 'Institutional', 'Landscape', 'Interior', 'Other']
 
 const PLAN_CARDS = [
-  {name: 'Essential', price: 'FREE', was: '₹5,000'},
-  {name: 'Studio', price: '₹12,000'},
-  {name: 'Showcase', price: '₹20,000'},
-  {name: 'Signature', price: '₹35,000'},
+  {name: 'Essential', price: 'FREE'},
 ]
 
 const STEP_LABELS = ['Contact', 'Project', 'Credits', 'Plan', 'Materials', 'Anything Else']
@@ -23,7 +20,7 @@ export default function SubmitForm({ initialPlan }) {
     name: '', email: '', phone: '',
     projectTitle: '', projectType: '', location: '', area: '', year: '', concept: '',
     architectCredit: '', photographerCredit: '', collaboratorCredits: '',
-    plan: initialPlan && PLAN_CARDS.some((p) => p.name === initialPlan) ? initialPlan : (initialPlan === 'Not sure' ? 'Not sure' : ''),
+    plan: 'Essential',
     driveLink: '', shootDate: '', siteAddress: '', additionalNotes: '',
   })
 
@@ -173,36 +170,18 @@ export default function SubmitForm({ initialPlan }) {
 
       {step === 4 && (
         <>
+          <p className="submit-step-note">You're submitting under our Essential plan — completely free.</p>
           <div className="plan-picker">
             {PLAN_CARDS.map((p) => (
-              <button
-                type="button"
-                key={p.name}
-                className={`plan-pick${data.plan === p.name ? ' selected' : ''}`}
-                onClick={() => update('plan', p.name)}
-              >
+              <div className="plan-pick selected" key={p.name}>
                 <div className="plan-pick-name">{p.name}</div>
                 <div className="plan-pick-price">
                   {p.was && <span className="was">{p.was}</span>}
                   <span className={p.price === 'FREE' ? 'free' : ''}>{p.price}</span>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
-          <label className="join-form-full" style={{marginTop: 20}}>
-            <span
-              onClick={() => update('plan', data.plan === 'Not sure' ? '' : 'Not sure')}
-              style={{cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8}}
-            >
-              <input
-                type="checkbox"
-                checked={data.plan === 'Not sure'}
-                onChange={() => update('plan', data.plan === 'Not sure' ? '' : 'Not sure')}
-                style={{width: 'auto'}}
-              />
-              Not sure which plan — help me choose
-            </span>
-          </label>
         </>
       )}
 
