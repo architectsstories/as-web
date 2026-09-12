@@ -19,7 +19,7 @@ variable there. `.env.local.example` mirrors that for local dev.
 | Page                  | What it does                                              |
 |------------------------|-------------------------------------------------------------|
 | `/` (homepage)          | `featured` singleton — hero, featured projects/stories/courses/people |
-| `/projects`, `/projects/[slug]` | all Projects · one Project (fires `TrackProjectView` → increments `viewCount`) |
+| `/projects`, `/projects/[slug]` | all Projects · one Project (fires `TrackProjectView` → increments `viewCount`; also shows up to 3 linked Community members via the reverse of Person's Related Projects) |
 | `/stories`, `/stories/[slug]`   | all Stories · one Story |
 | `/courses`, `/courses/[slug]`   | all Courses · one Course, with curriculum accordion + instructor card |
 | `/learn`, `/learn/[slug]`       | Learn programmes |

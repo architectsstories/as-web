@@ -22,7 +22,10 @@ export const allProjectsQuery = `*[_type == "project"] | order(year desc){
 }`
 
 export const projectBySlugQuery = `*[_type == "project" && slug.current == $slug][0]{
-  title, studio, location, category, area, year, mainImage, gallery, description
+  title, studio, location, category, area, year, mainImage, gallery, description,
+  "relatedPeople": *[_type == "person" && references(^._id)][0...3]{
+    name, "slug": slug.current, role, roleSecondary, roleCustom, photo
+  }
 }`
 
 // Auto-ranked by page views (Project.viewCount) — no manual curation.

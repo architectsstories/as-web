@@ -3,6 +3,7 @@ import { PortableText } from '@portabletext/react'
 import { client } from '../../../lib/sanity'
 import { urlFor } from '../../../lib/image'
 import { projectBySlugQuery } from '../../../lib/queries'
+import { formatRole } from '../../../lib/formatRole'
 import TrackProjectView from '../../../components/TrackProjectView'
 
 export const revalidate = 60
@@ -17,6 +18,8 @@ export default async function ProjectDetailPage({ params }) {
       </div>
     )
   }
+
+  const relatedPeople = (project.relatedPeople || []).filter((p) => p && p.slug)
 
   return (
     <div className="wrap">
@@ -43,11 +46,30 @@ export default async function ProjectDetailPage({ params }) {
         <div className="item"><div className="l">Year</div><div className="v">{project.year || '—'}</div></div>
       </div>
 
-      {project.description && (
-        <div className="detail-body">
-          <PortableText value={project.description} />
-        </div>
-      )}
+      <div className={`detail-row${relatedPeople.length ? ' has-people' : ''}`}>
+        {project.description && (
+          <div className="detail-body">
+            <PortableText value={project.description} />
+          </div>
+        )}
+
+        {relatedPeople.length > 0 && (
+          <aside className="people-side">
+            <div className="people-side-head">Project By</div>
+            {relatedPeople.map((p) => (
+              <Link key={p.slug} className="people-side-card" href={`/community/people/${p.slug}`}>
+                <div className="people-side-ph">
+                  {p.photo && <img src={urlFor(p.photo).width(120).height(120).url()} alt={p.name} />}
+                </div>
+                <div>
+                  <div className="people-side-name">{p.name}</div>
+                  <div className="people-side-role">{formatRole(p)}</div>
+                </div>
+              </Link>
+            ))}
+          </aside>
+        )}
+      </div>
 
       {project.gallery?.length > 0 && (
         <div className="gallery-grid">
