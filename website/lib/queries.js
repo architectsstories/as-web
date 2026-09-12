@@ -68,5 +68,6 @@ export const allPeopleQuery = `*[_type == "person"] | order(name asc){
 }`
 
 export const personBySlugQuery = `*[_type == "person" && slug.current == $slug][0]{
-  name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl
+  name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl,
+  "relatedProjects": relatedProjects[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage}
 }`

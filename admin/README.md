@@ -1,74 +1,69 @@
 # Architects Stories — Admin Panel (Sanity Studio)
 
-This is the **Admin Panel** for Architects Stories, built on Sanity Studio.
-It matches this stack:
+The **Admin Panel** for Architects Stories, built on Sanity Studio.
 
 ```
 Architects Stories
 │
-├── Sanity CMS  ───────►  this project (Content / Admin Panel)
-├── Next.js     ───────►  the public website (separate project, built next)
-├── GitHub      ───────►  where both projects' code lives
-└── Vercel      ───────►  hosting for the Next.js website (Studio can also deploy via Sanity's own hosting)
+├── Sanity CMS  ───────►  this project — k5fw7bl7 / production dataset
+├── Next.js     ───────►  ../website — the public site, reads the same dataset
+├── GitHub      ───────►  both folders live in the same repo
+└── Vercel      ───────►  hosts ../website (Studio hosts itself via Sanity)
 ```
 
-## Modules included
+**This is the live project — not a template.** `projectId: 'k5fw7bl7'` in
+`sanity.config.ts` and `sanity.cli.ts` is the real, already-created Sanity
+project. There's nothing to swap out before running this.
 
-| Module     | How it's implemented                                            |
-|------------|-------------------------------------------------------------------|
-| Dashboard  | `@sanity/dashboard` plugin — overview widgets                     |
-| Projects   | `project` schema (title, studio, location, category, gallery...)  |
-| Stories    | `story` schema (title, category, author, body, publishedAt...)    |
-| Courses    | `course` schema (title, instructor, curriculum modules, price...) |
-| Featured   | `featured` singleton — controls homepage hero/featured sections   |
-| Media      | `sanity-plugin-media` — visual asset library                      |
-| Settings   | `siteSettings` singleton — logo, socials, footer text              |
+## Modules
 
-A `person` schema is also included since Courses (instructors) and the
-homepage "People Behind the Spaces" section both need it.
+| Module        | How it's implemented                                              |
+|----------------|---------------------------------------------------------------------|
+| Dashboard      | `@sanity/dashboard` plugin — overview widgets                       |
+| **Submissions**| `submission` schema — every "Submit Your Work" entry from `/submit`, sorted newest first, with a `status` field (New → Contacted → Confirmed/Declined → Published) for triage |
+| **Join Applications** | `joinApplication` schema — every "Join AS" entry from `/join`. Has a custom **"Approve & Add to Community"** button (`actions/approveAndAddPerson.ts`) that creates a matching `person` document and marks the application Accepted, in one click |
+| Projects       | `project` schema (title, studio, location, category, gallery, `viewCount`...) |
+| Stories        | `story` schema (title, category, author, body, publishedAt...)      |
+| Courses        | `course` schema (title, instructor, curriculum modules, price...)   |
+| People         | `person` schema — instructors, and everyone in the community directory (including anyone approved from Join Applications). Each person can also be linked to any number of published `project` documents via **Related Projects**, shown on their `/community/people/[slug]` page |
+| Events         | `event` schema                                                       |
+| Featured       | `featured` singleton — controls homepage hero/featured sections     |
+| Media          | `sanity-plugin-media` — visual asset library                        |
+| Settings       | `siteSettings` singleton — logo, socials, footer text                |
 
-## Setup (Windows / VS Code)
+Submissions sit at the top of the left-hand nav since they're the one list
+that needs regular attention.
 
-1. **Install dependencies.** Open this folder in VS Code, open a terminal
-   (Terminal → New Terminal), and run:
-   ```
-   npm install
-   ```
+## Running locally
 
-2. **Create a Sanity project** (if you don't have one yet). Still in the
-   terminal:
-   ```
-   npx sanity login
-   npx sanity projects create
-   ```
-   This prints a **Project ID** — copy it.
+```
+npm install
+npx sanity login     # once per machine — use the account that owns k5fw7bl7
+npm run dev
+```
+Opens the Admin Panel at **http://localhost:3333**.
 
-3. **Add your Project ID.** Open `sanity.config.ts` and `sanity.cli.ts` and
-   replace `YOUR_SANITY_PROJECT_ID` with the ID from step 2.
+## Deploying
 
-4. **Run the Studio locally:**
-   ```
-   npm run dev
-   ```
-   This starts the Admin Panel at **http://localhost:3333**.
+The Studio auto-deploys — `.github/workflows/deploy-admin.yml` runs
+`npm run deploy` on every push to `main` that touches `admin/**`, using the
+`SANITY_AUTH_TOKEN` repo secret. You normally don't need to run
+`npm run deploy` by hand; just push.
 
-5. **Create the two singleton documents.** In the Studio, click
-   "Featured (Homepage)" and "Settings" in the left nav and save each once
-   — they'll only ever have one entry.
+Live at: **https://architects-stories.sanity.studio** (`studioHost` in
+`sanity.cli.ts`).
 
-6. **Deploy the Studio (optional, for teammates to use it online):**
-   ```
-   npm run deploy
-   ```
-   This hosts it at `https://your-project-name.sanity.studio`.
+## Notes
 
-## Next steps
-
-- Push this folder to a GitHub repo.
-- Build the Next.js website in a separate project that reads this same
-  Sanity dataset (via `projectId` + `dataset`) to render Projects, Stories,
-  Courses and Featured content on the public site.
-- Deploy the Next.js site to Vercel, with `SANITY_PROJECT_ID` and
-  `SANITY_DATASET` set as environment variables.
-
-Happy to scaffold the Next.js website next, wired up to these exact schemas.
+- `admin/dist/` and `admin/old-production.tar.gz` are build output / a
+  dataset backup — both gitignored, don't hand-edit or commit them.
+- The website in `../website` reads this same dataset, and writes to it
+  from three places: the Submit form, the Join form, and project-view
+  tracking (`viewCount` on `project`) — all via a **separate write-enabled
+  API token** (`SANITY_API_TOKEN`), not the Studio login. See
+  `../website/README.md`.
+- ⚠️ If a `SANITY_API_TOKEN` value has ever been committed, shared in a zip,
+  or pasted somewhere outside your local `.env.local` / Vercel's
+  environment variables, treat it as compromised: go to
+  **manage.sanity.io → your project → API → Tokens**, delete it, and issue
+  a fresh one.

@@ -17,6 +17,10 @@ export default async function PersonDetailPage({ params }) {
     )
   }
 
+  // Dereferencing drops nulls for any related project that isn't published
+  // (or was deleted), so this only ever lists projects that are actually live.
+  const relatedProjects = (person.relatedProjects || []).filter((p) => p && p.slug)
+
   return (
     <div className="wrap">
       <div className="crumb">
@@ -55,6 +59,28 @@ export default async function PersonDetailPage({ params }) {
           )}
         </div>
       </div>
+
+      {relatedProjects.length > 0 && (
+        <section style={{paddingTop: 0}}>
+          <div className="section-head">
+            <div className="eyebrow-dot"><span className="dot" /><h2>Projects</h2></div>
+            <p className="section-lede">Published work connected to {person.name}.</p>
+          </div>
+          <div className="card-grid">
+            {relatedProjects.map((p) => (
+              <Link key={p.slug} className="card" href={`/projects/${p.slug}`}>
+                <div className="thumb">
+                  {p.mainImage && <img src={urlFor(p.mainImage).width(700).height(480).url()} alt={p.title} />}
+                </div>
+                <span className="cat">{p.category}</span>
+                <h4>{p.title}</h4>
+                <div className="sub">{p.studio}</div>
+                <div className="meta">{p.location}{p.area ? ` — ${p.area}` : ''}{p.year ? ` · ${p.year}` : ''}</div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

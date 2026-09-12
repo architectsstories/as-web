@@ -66,6 +66,13 @@ export default defineType({
       title: 'Portfolio URL',
       type: 'url',
     }),
+    defineField({
+      name: 'relatedProjects',
+      title: 'Related Projects',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'project'}]}],
+      description: 'Pick any published project(s) on the site this person is connected to (as architect, designer, or collaborator). Shown on their community profile page.',
+    }),
   ],
   preview: {
     select: {title: 'name', role: 'role', roleSecondary: 'roleSecondary', roleCustom: 'roleCustom', media: 'photo'},
