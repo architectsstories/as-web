@@ -24,7 +24,7 @@ export default async function HomePage() {
   const projects = data?.featuredProjects || []
   const latestProjects = data?.latestProjects || [] // newest projects, shown automatically in "Latest Stories"
   const courses = data?.featuredCourses || []
-  const people = data?.featuredPeople || []
+  const people = (data?.featuredPeople || []).filter((p) => p && p.isActive !== false)
 
   return (
     <>

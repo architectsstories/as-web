@@ -55,7 +55,7 @@ export default async function ProjectDetailPage({ params }) {
 
         {relatedPeople.length > 0 && (
           <aside className="people-side">
-            <div className="people-side-head">Project By</div>
+            <div className="people-side-head">Community</div>
             {relatedPeople.map((p) => (
               <Link key={p.slug} className="people-side-card" href={`/community/people/${p.slug}`}>
                 <div className="people-side-ph">

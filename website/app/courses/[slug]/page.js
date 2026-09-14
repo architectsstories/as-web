@@ -18,6 +18,10 @@ export default async function CourseDetailPage({ params }) {
     )
   }
 
+  // If the instructor has been disabled in the Admin Panel, treat this
+  // course as if it had none — same as a course with no instructor set.
+  const showInstructor = course.instructor && course.instructor.isActive !== false
+
   return (
     <div className="wrap">
       <div className="crumb">
@@ -35,7 +39,7 @@ export default async function CourseDetailPage({ params }) {
       </div>
 
       <div className="detail-meta-strip">
-        <div className="item"><div className="l">Instructor</div><div className="v">{course.instructor?.name || '—'}</div></div>
+        <div className="item"><div className="l">Instructor</div><div className="v">{showInstructor ? course.instructor.name : '—'}</div></div>
         <div className="item"><div className="l">Duration</div><div className="v">{course.duration || '—'}</div></div>
         <div className="item"><div className="l">Level</div><div className="v">{course.level || '—'}</div></div>
         <div className="item"><div className="l">Price</div><div className="v">{course.isFree ? 'Free' : `₹${course.price ?? '—'}`}</div></div>
@@ -77,7 +81,7 @@ export default async function CourseDetailPage({ params }) {
         </div>
       )}
 
-      {course.instructor && (
+      {showInstructor && (
         <div style={{display: 'flex', gap: 20, alignItems: 'center', padding: 28, background: 'var(--off)', borderRadius: 2, marginBottom: 40}}>
           {course.instructor.photo && (
             <img

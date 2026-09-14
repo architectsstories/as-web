@@ -25,7 +25,7 @@ project. There's nothing to swap out before running this.
 | Projects       | `project` schema (title, studio, location, category, gallery, `viewCount`...) |
 | Stories        | `story` schema (title, category, author, body, publishedAt...)      |
 | Courses        | `course` schema (title, instructor, curriculum modules, price...)   |
-| People         | `person` schema — instructors, and everyone in the community directory (including anyone approved from Join Applications). Each person can also be linked to any number of published `project` documents via **Related Projects** — shown on their own `/community/people/[slug]` page, and the relationship shows in reverse too: a project's detail page lists up to 3 linked community members in a small side card |
+| People         | `person` schema — instructors, and everyone in the community directory (including anyone approved from Join Applications). Has an **Active (visible on website)** toggle — turn it off to hide someone from the Community directory, their own profile page, homepage features, course instructor credit, and project Community cards, without deleting them. Each person can also be linked to any number of published `project` documents via **Related Projects** — shown on their own `/community/people/[slug]` page, and the relationship shows in reverse too: a project's detail page lists up to 3 linked *active* community members in a small side card |
 | Events         | `event` schema                                                       |
 | Featured       | `featured` singleton — controls homepage hero/featured sections     |
 | Media          | `sanity-plugin-media` — visual asset library                        |
