@@ -10,7 +10,7 @@ export const homepageQuery = `*[_type == "featured"][0]{
   featuredProjects[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
   "latestProjects": latestStories[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
   featuredCourses[]->{title, "slug": slug.current, category, thumbnail, price, isFree, instructor->{name}},
-  featuredPeople[]->{name, role, roleSecondary, roleCustom, location, photo}
+  featuredPeople[showInCommunity != false]->{name, role, roleSecondary, roleCustom, location, photo}
 }`
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -66,11 +66,11 @@ export const pastEventsQuery = `*[_type == "event" && startDateTime < now()] | o
   title, "slug": slug.current, category, startDateTime, location, mode, summary, coverImage
 }`
 
-export const allPeopleQuery = `*[_type == "person"] | order(name asc){
+export const allPeopleQuery = `*[_type == "person" && showInCommunity != false] | order(name asc){
   name, "slug": slug.current, role, roleSecondary, roleCustom, location, photo
 }`
 
-export const personBySlugQuery = `*[_type == "person" && slug.current == $slug][0]{
+export const personBySlugQuery = `*[_type == "person" && showInCommunity != false && slug.current == $slug][0]{
   name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl,
   "relatedProjects": relatedProjects[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage}
 }`

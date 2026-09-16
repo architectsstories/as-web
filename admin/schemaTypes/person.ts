@@ -67,6 +67,13 @@ export default defineType({
       type: 'url',
     }),
     defineField({
+      name: 'showInCommunity',
+      title: 'Show in Community',
+      type: 'boolean',
+      description: 'Turn off to hide this person from the public Community directory and profile.',
+      initialValue: true,
+    }),
+    defineField({
       name: 'relatedProjects',
       title: 'Related Projects',
       type: 'array',
