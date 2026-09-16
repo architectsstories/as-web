@@ -45,7 +45,6 @@ export default function SubmitPage({ searchParams }) {
 
             <div className="submit-sidebar-card">
               <h4>Talk to a Human First</h4>
-              <div className="submit-contact"><b>Naseef VP</b>Founder, Architects Stories</div>
               <div className="submit-contact"><b>+91 97444 12828</b>Call or WhatsApp</div>
               <div className="submit-contact"><b>architectsstories@gmail.com</b>Email</div>
             </div>

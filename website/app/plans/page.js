@@ -196,7 +196,6 @@ export default function PlansPage() {
             Submit Your Work →
           </Link>
           <div className="cta-contact">
-            <div><b>Naseef VP</b>Founder, Architects Stories</div>
             <div><b>+91 97444 12828</b>Call or WhatsApp</div>
             <div><b>architectsstories@gmail.com</b>Email</div>
           </div>
