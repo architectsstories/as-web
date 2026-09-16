@@ -13,13 +13,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'isActive',
-      title: 'Active (visible on website)',
-      type: 'boolean',
-      description: 'Turn off to hide this person from the Community directory, their profile page, homepage features, course instructor credits, and project Community cards — without deleting them.',
-      initialValue: true,
-    }),
-    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -82,11 +75,10 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'name', role: 'role', roleSecondary: 'roleSecondary', roleCustom: 'roleCustom', media: 'photo', isActive: 'isActive'},
-    prepare({title, role, roleSecondary, roleCustom, media, isActive}) {
-      const roleText = roleCustom || [role, roleSecondary].filter(Boolean).join(' / ')
-      const subtitle = isActive === false ? `Disabled${roleText ? ' — ' + roleText : ''}` : roleText
-      return {title: isActive === false ? `${title} (hidden)` : title, subtitle, media}
+    select: {title: 'name', role: 'role', roleSecondary: 'roleSecondary', roleCustom: 'roleCustom', media: 'photo'},
+    prepare({title, role, roleSecondary, roleCustom, media}) {
+      const subtitle = roleCustom || [role, roleSecondary].filter(Boolean).join(' / ')
+      return {title, subtitle, media}
     },
   },
 })

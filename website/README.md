@@ -23,7 +23,7 @@ variable there. `.env.local.example` mirrors that for local dev.
 | `/stories`, `/stories/[slug]`   | all Stories · one Story |
 | `/courses`, `/courses/[slug]`   | all Courses · one Course, with curriculum accordion + instructor card |
 | `/learn`, `/learn/[slug]`       | Learn programmes |
-| `/community`, `/community/people/[slug]` | community directory · one person, including any Related Projects picked for them in the Admin Panel. People with **Active** turned off in the Admin Panel are excluded everywhere — directory, their own profile URL, homepage features, course instructor credit, and project Community cards |
+| `/community`, `/community/people/[slug]` | community directory · one person, including any Related Projects picked for them in the Admin Panel |
 | `/plans`                | **Featuring & Promotion Plans** — static pricing/plans page |
 | `/submit`                | **Submit Your Work** — the featuring intake form (see below) |
 | `/join`                  | **Join AS** — community application form (see below) |

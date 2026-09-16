@@ -76,6 +76,8 @@ export default defineType({
       type: 'array',
       group: 'media',
       of: [{type: 'image', options: {hotspot: true}}],
+      options: {layout: 'grid'},
+      description: 'Drag-and-drop or use Upload to select multiple images at once — they\'ll all be added to the gallery in one go.',
     }),
     defineField({
       name: 'description',

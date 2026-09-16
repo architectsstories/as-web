@@ -1,31 +1,33 @@
 # Architects Stories
 
-Both halves of the project, connected to the **same Sanity project** (`k5fw7bl7` / `production` dataset):
+This is the **live, current** state of the project — the single source of
+truth going forward. Older exports of this project (different Sanity
+project ID, different repo) are superseded; don't mix code or IDs from them
+back in.
 
 ```
-architects-stories/
+Sanity project:  k5fw7bl7  (dataset: production)
+GitHub repo:     https://github.com/architectsstories/as-web
+Website hosting: Vercel — Root Directory = website/
+Studio hosting:  https://architects-stories.sanity.studio (auto-deployed)
+```
+
+```
+as-web/
 ├── admin/     ─── Sanity Studio (Content / Admin Panel)   → writes to Sanity
 └── website/   ─── Next.js public site                     → reads from Sanity
 ```
 
-They talk to each other only through Sanity — there's no direct code
-dependency between the two folders, so each has its own `package.json` and
-its own `npm install`.
-
-## What's already connected
-
-- `admin/sanity.config.ts` and `admin/sanity.cli.ts` → `projectId: 'k5fw7bl7'`
-- `website/.env.local` → `NEXT_PUBLIC_SANITY_PROJECT_ID=k5fw7bl7`
-
-Both point at the same `production` dataset, so anything published in the
-Admin Panel shows up on the website (the site re-checks Sanity at most once
-a minute — see `revalidate` in each page file).
+They talk to each other only through Sanity — no direct code dependency
+between the two folders, so each has its own `package.json` and its own
+`npm install`. See `admin/README.md` and `website/README.md` for the
+specifics of each half.
 
 ## Running both locally
 
-Open two terminals from this `architects-stories` folder:
+Open two terminals from this `as-web` folder:
 
-```
+```bash
 # Terminal 1 — Admin Panel (Sanity Studio)
 cd admin
 npm install
@@ -33,38 +35,69 @@ npm run dev
 # → http://localhost:3333
 ```
 
-```
+```bash
 # Terminal 2 — Website (Next.js)
 cd website
 npm install
+cp .env.local.example .env.local   # already points at k5fw7bl7 — no edits needed
 npm run dev
 # → http://localhost:3000
 ```
 
-## First-time setup checklist
+## Day-to-day workflow
 
-1. In the Admin Panel (`localhost:3333`), sign in with `npx sanity login`
-   (run once from `admin/`) using the account that owns project `k5fw7bl7`.
-2. Create and publish at least one Project, Story, and Course.
-3. Open the **Featured (Homepage)** singleton and add the ones you want to
-   appear on the homepage — listing pages (`/projects`, `/stories`,
-   `/courses`) show everything automatically; the homepage only shows what's
-   featured.
-4. Reload `localhost:3000` — your real content should now appear.
+- **Editing content** (projects, stories, courses, people, homepage
+  features) → do this in the Admin Panel, either `localhost:3333` or
+  `https://architects-stories.sanity.studio`. No git involved — publishing
+  updates the live site within about a minute (see `revalidate` in each
+  `website/app/**/page.js`).
+- **Editing code** (layout, components, schemas, styling) → edit locally in
+  VS Code, then from the **Source Control** tab: stage → commit → **Sync
+  Changes**. That push alone does both of these, automatically:
+  - touched `website/**` → Vercel rebuilds and redeploys the site
+  - touched `admin/**` → GitHub Actions (`.github/workflows/deploy-admin.yml`)
+    redeploys the Studio to `architects-stories.sanity.studio`
 
-## Deploying
+Nothing else to trigger by hand.
 
-- **Admin Panel:** `cd admin && npm run deploy` → hosts the Studio at
-  `https://<your-project-name>.sanity.studio`.
-- **Website:** push `website/` to GitHub (or this whole folder, with
-  Vercel's root directory set to `website/`) and import it in Vercel.
-  Add the same two environment variables from `website/.env.local`:
-  - `NEXT_PUBLIC_SANITY_PROJECT_ID` = `k5fw7bl7`
-  - `NEXT_PUBLIC_SANITY_DATASET` = `production`
+## Don't commit
 
-## Known gap (from the earlier review)
+Already covered by `.gitignore`, but worth knowing: `node_modules/`,
+`.next/`, `.sanity/`, `.env.local`, `admin/dist/` (Studio build output), and
+`admin/old-production.tar.gz` (a dataset backup) never belong in a commit —
+they're either regenerated automatically or are local-only.
 
-The `siteSettings` singleton (logo, tagline, social links, footer text) is
-modeled in the Admin Panel and queried via `siteSettingsQuery` in
-`website/lib/queries.js`, but `Header.js` / `Footer.js` don't call it yet —
-they still show hardcoded text. Say the word if you want that wired up too.
+## ⚠️ Secrets
+
+`website/.env.local` holds `SANITY_API_TOKEN` — a **write-enabled**
+credential (used by `/submit`, `/join`, and project-view tracking). It is
+not a public key. Never commit it, paste it into chat, or include it in a
+zip you hand off — if a real value ever leaks that way, rotate it
+immediately at **manage.sanity.io → your project → API → Tokens**. See
+`website/README.md` for the full note.
+
+## What's live right now
+
+Beyond the original homepage, the site now includes:
+
+- **`/submit`** — the Submit Your Work form (writes a `submission` doc)
+- **`/plans`** — Featuring & Promotion Plans (static pricing page)
+- **`/join`** — Join AS community application (writes a `joinApplication`
+  doc; approving one in the Admin Panel auto-creates a `person` via a
+  custom Studio action)
+- Project view tracking (`viewCount`) powering a "Popular Posts" rail
+  (`PopularPostsScroller` / `PublicationCard`)
+
+`admin/README.md` and `website/README.md` have the full breakdown.
+
+## Known gaps (carried over, still open)
+
+- The `siteSettings` singleton (logo, tagline, social links, footer text)
+  is modeled in the Admin Panel and queried via `siteSettingsQuery` in
+  `website/lib/queries.js`, but `Header.js` / `Footer.js` don't call it
+  yet — they still show hardcoded text.
+- The header's nav links to `/submit` ("Get Featured") and `/join` ("Join
+  Community"), but not to `/plans` — worth adding if you want pricing
+  reachable directly from the nav.
+
+Say the word if you want either wired up.

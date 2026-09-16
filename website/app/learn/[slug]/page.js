@@ -4,7 +4,6 @@ import { client } from '../../../lib/sanity'
 import { urlFor } from '../../../lib/image'
 import { courseBySlugQuery } from '../../../lib/queries'
 import { formatRole } from '../../../lib/formatRole'
-import EnrollButton from '../../../components/EnrollButton'
 
 export const revalidate = 60
 
@@ -44,7 +43,7 @@ export default async function CourseDetailPage({ params }) {
           <div className="item"><div className="l">Level</div><div className="v">{course.level || '—'}</div></div>
           <div className="item"><div className="l">Fee</div><div className="v">{course.isFree ? 'Free' : `₹${course.price ?? '—'}`}</div></div>
         </div>
-        <EnrollButton course={course} />
+        <CtaButton course={course} />
       </div>
 
       {course.description && (
@@ -85,7 +84,7 @@ export default async function CourseDetailPage({ params }) {
           <div className="curriculum-cta-col">
             <div className="cta-glass-box">
               <div className="cta-glass-label">Ready to start?</div>
-              <EnrollButton course={course} size="large" full />
+              <CtaButton course={course} size="large" full />
             </div>
           </div>
         </div>
@@ -114,6 +113,23 @@ export default async function CourseDetailPage({ params }) {
         </div>
       )}
     </div>
+  )
+}
+
+function CtaButton({ course, size, full }) {
+  const label = course.ctaText || 'Enroll Now'
+  const href = course.ctaLink || '#'
+  const large = size === 'large'
+
+  return (
+    <a
+      href={href}
+      target={href.startsWith('http') ? '_blank' : undefined}
+      rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+      className={`cta-btn ${large ? 'lg' : 'sm'}${full ? ' full' : ''}`}
+    >
+      {label}
+    </a>
   )
 }
 
