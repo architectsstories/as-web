@@ -38,7 +38,7 @@ export default async function CourseDetailPage({ params }) {
 
       <div className="detail-meta-strip">
         <div style={{display: 'flex', flexWrap: 'wrap', gap: 28}}>
-          <div className="item"><div className="l">Instructor</div><div className="v">{course.instructor?.name || '—'}</div></div>
+          {course.instructor && <div className="item"><div className="l">Instructor</div><div className="v">{course.instructor.name}</div></div>}
           <div className="item"><div className="l">Duration</div><div className="v">{course.duration || '—'}</div></div>
           <div className="item"><div className="l">Level</div><div className="v">{course.level || '—'}</div></div>
           <div className="item"><div className="l">Fee</div><div className="v">{course.isFree ? 'Free' : `₹${course.price ?? '—'}`}</div></div>

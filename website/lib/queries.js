@@ -9,8 +9,8 @@ export const homepageQuery = `*[_type == "featured"][0]{
   heroSlides[]->{title, "slug": slug.current, studio, location, category, mainImage, description},
   featuredProjects[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
   "latestProjects": latestStories[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
-  featuredCourses[]->{title, "slug": slug.current, category, thumbnail, price, isFree, instructor->{name}},
-  featuredPeople[showInCommunity != false]->{name, role, roleSecondary, roleCustom, location, photo}
+  featuredCourses[]->{title, "slug": slug.current, category, thumbnail, price, isFree, "instructor": select(instructor && instructor->isEnabled != false => instructor->{name})},
+  featuredPeople[@->isEnabled != false]->{name, role, roleSecondary, roleCustom, location, photo}
 }`
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -23,7 +23,7 @@ export const allProjectsQuery = `*[_type == "project"] | order(year desc){
 
 export const projectBySlugQuery = `*[_type == "project" && slug.current == $slug][0]{
   title, studio, location, category, area, year, mainImage, gallery, description,
-  "relatedPeople": *[_type == "person" && references(^._id)][0...3]{
+  "relatedPeople": *[_type == "person" && references(^._id) && isEnabled != false][0...3]{
     name, "slug": slug.current, role, roleSecondary, roleCustom, photo
   }
 }`
@@ -50,12 +50,12 @@ export const storyBySlugQuery = `*[_type == "project" && slug.current == $slug &
 
 export const allCoursesQuery = `*[_type == "course"] | order(_createdAt desc){
   title, "slug": slug.current, category, thumbnail, price, isFree, level, duration, mode,
-  instructor->{name}
+  "instructor": select(instructor && instructor->isEnabled != false => instructor->{name})
 }`
 
 export const courseBySlugQuery = `*[_type == "course" && slug.current == $slug][0]{
   title, category, thumbnail, bannerImage, price, isFree, level, duration, description, outcomes, curriculum, ctaText, ctaLink,
-  instructor->{name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl}
+  "instructor": select(instructor && instructor->isEnabled != false => instructor->{name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl})
 }`
 
 export const upcomingEventsQuery = `*[_type == "event" && startDateTime >= now()] | order(startDateTime asc){
@@ -66,11 +66,11 @@ export const pastEventsQuery = `*[_type == "event" && startDateTime < now()] | o
   title, "slug": slug.current, category, startDateTime, location, mode, summary, coverImage
 }`
 
-export const allPeopleQuery = `*[_type == "person" && showInCommunity != false] | order(name asc){
+export const allPeopleQuery = `*[_type == "person" && isEnabled != false] | order(name asc){
   name, "slug": slug.current, role, roleSecondary, roleCustom, location, photo
 }`
 
-export const personBySlugQuery = `*[_type == "person" && showInCommunity != false && slug.current == $slug][0]{
+export const personBySlugQuery = `*[_type == "person" && slug.current == $slug && isEnabled != false][0]{
   name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl,
   "relatedProjects": relatedProjects[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage}
 }`

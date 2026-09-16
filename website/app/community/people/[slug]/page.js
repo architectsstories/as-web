@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { client } from '../../../../lib/sanity'
 import { urlFor } from '../../../../lib/image'
 import { personBySlugQuery } from '../../../../lib/queries'
@@ -9,13 +10,7 @@ export const revalidate = 60
 export default async function PersonDetailPage({ params }) {
   const person = await client.fetch(personBySlugQuery, { slug: params.slug })
 
-  if (!person) {
-    return (
-      <div className="wrap">
-        <div className="empty-state">Person not found.</div>
-      </div>
-    )
-  }
+  if (!person) notFound()
 
   // Dereferencing drops nulls for any related project that isn't published
   // (or was deleted), so this only ever lists projects that are actually live.

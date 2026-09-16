@@ -7,6 +7,13 @@ export default defineType({
   description: 'Instructors, mentors, and community members featured across the site.',
   fields: [
     defineField({
+      name: 'isEnabled',
+      title: 'Enable Person on Website',
+      type: 'boolean',
+      description: 'When OFF, this person is completely hidden from the public website, including Community, profiles, course instructors, and related people.',
+      initialValue: true,
+    }),
+    defineField({
       name: 'name',
       title: 'Name',
       type: 'string',
@@ -65,13 +72,6 @@ export default defineType({
       name: 'portfolioUrl',
       title: 'Portfolio URL',
       type: 'url',
-    }),
-    defineField({
-      name: 'showInCommunity',
-      title: 'Show in Community',
-      type: 'boolean',
-      description: 'Turn off to hide this person from the public Community directory and profile.',
-      initialValue: true,
     }),
     defineField({
       name: 'relatedProjects',
