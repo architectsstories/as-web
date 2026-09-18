@@ -24,18 +24,25 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${figtree.variable} ${spaceGrotesk.variable}`}>
-        <Header />
-        {children}
-        <Footer />
+  <head>
+    <meta
+      name="google-adsense-account"
+      content="ca-pub-4659159605242515"
+    />
+  </head>
 
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4659159605242515"
-          crossOrigin="anonymous"
-          strategy="beforeInteractive"
-        />
-      </body>
-    </html>
+  <body className={`${figtree.variable} ${spaceGrotesk.variable}`}>
+    <Header />
+    {children}
+    <Footer />
+
+    <Script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4659159605242515"
+      crossOrigin="anonymous"
+      strategy="beforeInteractive"
+    />
+  </body>
+  </html>
   )
 }
