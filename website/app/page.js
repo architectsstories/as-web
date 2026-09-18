@@ -256,10 +256,10 @@ export default async function HomePage() {
               <Link className="band-cta" href="/#find">Join AS Community →</Link>
             </div>
             <div className="band-stats">
-              <div className="band-stat"><div className="n">12K+</div><div className="l">Creators</div></div>
+              <div className="band-stat"><div className="n">9K+</div><div className="l">Creators</div></div>
               <div className="band-stat"><div className="n">500+</div><div className="l">Projects</div></div>
-              <div className="band-stat"><div className="n">100+</div><div className="l">Practices</div></div>
-              <div className="band-stat"><div className="n">50+</div><div className="l">Learning Programs</div></div>
+              <div className="band-stat"><div className="n">50+</div><div className="l">Practices</div></div>
+              <div className="band-stat"><div className="n">10+</div><div className="l">Learning Programs</div></div>
             </div>
           </div>
         </div>
