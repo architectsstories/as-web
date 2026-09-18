@@ -17,7 +17,7 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata = {
-  title: 'Architects Stories — Stories, Projects, Learning & Community',
+  title: 'Architects Stories — Architecture, Projects, Learning & Community',
   description:
     'Architects Stories is a platform for the architecture community. We feature and tell stories through our media, connect professionals through our network, and create learning opportunities through industry experts.',
 }
@@ -43,6 +43,19 @@ export default function RootLayout({ children }) {
       crossOrigin="anonymous"
       strategy="beforeInteractive"
     />
+      <Script
+  src="https://www.googletagmanager.com/gtag/js?id=G-X3R21B37LR"
+  strategy="afterInteractive"
+/>
+
+<Script id="google-analytics" strategy="afterInteractive">
+  {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-X3R21B37LR');
+  `}
+</Script>
   </body>
   </html>
   )
