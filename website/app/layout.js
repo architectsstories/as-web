@@ -18,7 +18,8 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata = {
   title: 'Architects Stories — Stories, Projects, Learning & Community',
-  description: 'Architecture storytelling, projects, learning and community, rooted in Kerala/India architecture.',
+  description:
+    'Architects Stories is a platform for the architecture community. We feature and tell stories through our media, connect professionals through our network, and create learning opportunities through industry experts.',
 }
 
 export default function RootLayout({ children }) {
