@@ -7,6 +7,7 @@ import { excerptFromBlocks } from '../lib/excerpt'
 import HeroCarousel from '../components/HeroCarousel'
 import PopularPostsScroller from '../components/PopularPostsScroller'
 import PublicationCard from '../components/PublicationCard'
+import VerifiedBadge from '../components/VerifiedBadge'
 
 export const revalidate = 60 // re-fetch from Sanity at most once a minute
 
@@ -201,7 +202,7 @@ export default async function HomePage() {
                   <div className="ph">
                     {p.photo && <img src={urlFor(p.photo).width(500).height(525).url()} alt={p.name} />}
                   </div>
-                  <h4>{p.name}</h4>
+                  <h4>{p.name}{p.coaNumber && <VerifiedBadge />}</h4>
                   <p className="role">{formatRole(p)}</p>
                   <p className="loc">{p.location}</p>
                 </div>

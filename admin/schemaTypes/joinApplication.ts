@@ -18,6 +18,18 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'mobile',
+      title: 'Mobile Number',
+      type: 'string',
+      description: 'Optional.',
+    }),
+    defineField({
+      name: 'photo',
+      title: 'Photo',
+      type: 'image',
+      options: {hotspot: true},
+    }),
+    defineField({
       name: 'role',
       title: 'Role',
       type: 'string',
@@ -31,6 +43,13 @@ export default defineType({
       type: 'string',
       description: 'Optional. What the applicant typed if their role wasn\u2019t in the list above.',
       validation: (Rule) => Rule.max(30).warning('Keep this short — under 30 characters.'),
+    }),
+    defineField({
+      name: 'coaNumber',
+      title: 'COA Number',
+      type: 'string',
+      description: 'Council of Architecture registration number. Only asked when the applicant selects "Architect" as their role. If present, approving this application marks the resulting Person as verified (blue badge on the website) and prefixes their name with "Ar."',
+      hidden: ({parent}) => parent?.role !== 'Architect',
     }),
     defineField({
       name: 'location',
@@ -70,9 +89,9 @@ export default defineType({
     },
   ],
   preview: {
-    select: {title: 'name', subtitle: 'email', status: 'status'},
-    prepare({title, subtitle, status}) {
-      return {title, subtitle: `${subtitle} — ${status || 'New'}`}
+    select: {title: 'name', subtitle: 'email', status: 'status', coa: 'coaNumber'},
+    prepare({title, subtitle, status, coa}) {
+      return {title, subtitle: `${subtitle} — ${status || 'New'}${coa ? ' — COA on file' : ''}`}
     },
   },
 })

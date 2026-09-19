@@ -57,6 +57,18 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'mobile',
+      title: 'Mobile Number',
+      type: 'string',
+      description: 'Optional. Not shown publicly — for internal contact only.',
+    }),
+    defineField({
+      name: 'coaNumber',
+      title: 'COA Number',
+      type: 'string',
+      description: 'Council of Architecture registration number. If set, a small verified badge appears next to this person\u2019s name everywhere on the website. Filled in automatically when a Join Application with a COA number is approved — or set it directly here for anyone added manually.',
+    }),
+    defineField({
       name: 'photo',
       title: 'Photo',
       type: 'image',
@@ -82,10 +94,10 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'name', role: 'role', roleSecondary: 'roleSecondary', roleCustom: 'roleCustom', media: 'photo'},
-    prepare({title, role, roleSecondary, roleCustom, media}) {
+    select: {title: 'name', role: 'role', roleSecondary: 'roleSecondary', roleCustom: 'roleCustom', media: 'photo', coa: 'coaNumber'},
+    prepare({title, role, roleSecondary, roleCustom, media, coa}) {
       const subtitle = roleCustom || [role, roleSecondary].filter(Boolean).join(' / ')
-      return {title, subtitle, media}
+      return {title, subtitle: coa ? `✓ Verified — ${subtitle}` : subtitle, media}
     },
   },
 })

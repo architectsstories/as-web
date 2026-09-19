@@ -10,7 +10,7 @@ export const homepageQuery = `*[_type == "featured"][0]{
   featuredProjects[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
   "latestProjects": latestStories[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
   featuredCourses[]->{title, "slug": slug.current, category, thumbnail, price, isFree, "instructor": select(instructor && instructor->isEnabled != false => instructor->{name})},
-  featuredPeople[@->isEnabled != false]->{name, role, roleSecondary, roleCustom, location, photo}
+  featuredPeople[@->isEnabled != false]->{name, role, roleSecondary, roleCustom, location, photo, coaNumber}
 }`
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -24,7 +24,7 @@ export const allProjectsQuery = `*[_type == "project"] | order(year desc){
 export const projectBySlugQuery = `*[_type == "project" && slug.current == $slug][0]{
   title, studio, location, category, area, year, mainImage, gallery, description,
   "relatedPeople": *[_type == "person" && references(^._id) && isEnabled != false][0...3]{
-    name, "slug": slug.current, role, roleSecondary, roleCustom, photo
+    name, "slug": slug.current, role, roleSecondary, roleCustom, photo, coaNumber
   }
 }`
 
@@ -55,7 +55,7 @@ export const allCoursesQuery = `*[_type == "course"] | order(_createdAt desc){
 
 export const courseBySlugQuery = `*[_type == "course" && slug.current == $slug][0]{
   title, category, thumbnail, bannerImage, price, isFree, level, duration, description, outcomes, curriculum, ctaText, ctaLink,
-  "instructor": select(instructor && instructor->isEnabled != false => instructor->{name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl})
+  "instructor": select(instructor && instructor->isEnabled != false => instructor->{name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl, coaNumber})
 }`
 
 export const upcomingEventsQuery = `*[_type == "event" && startDateTime >= now()] | order(startDateTime asc){
@@ -67,10 +67,10 @@ export const pastEventsQuery = `*[_type == "event" && startDateTime < now()] | o
 }`
 
 export const allPeopleQuery = `*[_type == "person" && isEnabled != false] | order(name asc){
-  name, "slug": slug.current, role, roleSecondary, roleCustom, location, photo
+  name, "slug": slug.current, role, roleSecondary, roleCustom, location, photo, coaNumber
 }`
 
 export const personBySlugQuery = `*[_type == "person" && slug.current == $slug && isEnabled != false][0]{
-  name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl,
+  name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl, coaNumber,
   "relatedProjects": relatedProjects[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage}
 }`

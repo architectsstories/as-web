@@ -52,6 +52,15 @@ export const deskStructure: StructureResolver = (S) =>
             .defaultOrdering([{field: 'submittedAt', direction: 'desc'}])
         ),
 
+      S.listItem()
+        .title('Course Enrollments')
+        .schemaType('enrollment')
+        .child(
+          S.documentTypeList('enrollment')
+            .title('Course Enrollments')
+            .defaultOrdering([{field: 'submittedAt', direction: 'desc'}])
+        ),
+
       S.divider(),
 
       // Singleton: only one "Featured" document ever exists

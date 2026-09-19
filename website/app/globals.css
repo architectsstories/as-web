@@ -454,3 +454,25 @@ footer{padding:30px 0;border-top:1px solid var(--line);}
 .people-side-name{font-size:13px;font-weight:600;line-height:1.3;}
 .people-side-role{font-size:11.5px;color:var(--grey-light);margin-top:2px;}
 .people-side-card:hover .people-side-name{color:var(--red);}
+
+/* ---------- verified badge (COA-registered architects) ---------- */
+.verified-badge{display:inline-block;vertical-align:middle;margin-left:5px;position:relative;top:-1px;flex:none;}
+
+/* ---------- popup modal (EnrollButton, and anything else using this pattern) ---------- */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;background:rgba(10,10,10,.6);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.modal-box{
+  position:relative;background:var(--white);border-radius:2px;
+  width:100%;max-width:640px;max-height:88vh;overflow-y:auto;padding:40px 36px;
+}
+.modal-close{
+  position:absolute;top:16px;right:16px;width:32px;height:32px;border:none;background:transparent;
+  font-size:20px;line-height:1;color:var(--grey);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;border-radius:50%;transition:background .15s,color .15s;
+}
+.modal-close:hover{background:var(--off);color:var(--black);}
+.modal-title{font-size:20px;text-transform:uppercase;margin-bottom:8px;padding-right:30px;}
+.modal-sub{font-size:13.5px;color:var(--grey);margin-bottom:24px;}
+@media(max-width:640px){.modal-box{padding:30px 22px;}}

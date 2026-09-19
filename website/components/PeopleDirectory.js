@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { urlFor } from '../lib/image'
 import { formatRole } from '../lib/formatRole'
 import { personCategory } from '../lib/roleToCategory'
+import VerifiedBadge from './VerifiedBadge'
 
 const CATEGORIES = ['Architects', 'Designers', 'Studios', 'Makers', 'Mentors', 'Material Brands']
 
@@ -70,7 +71,7 @@ export default function PeopleDirectory({ people, initialQuery = '', initialLoca
               <div className="ph">
                 {p.photo && <img src={urlFor(p.photo).width(400).height(420).url()} alt={p.name} />}
               </div>
-              <h4>{p.name}</h4>
+              <h4>{p.name}{p.coaNumber && <VerifiedBadge />}</h4>
               {formatRole(p) && <div className="role">{formatRole(p)}</div>}
               {p.location && <div className="loc">{p.location}</div>}
             </Link>

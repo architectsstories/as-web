@@ -40,13 +40,24 @@ export const approveAndAddPersonAction: DocumentActionComponent = (props: Docume
           slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`
         }
 
+        // A COA number means this is a verified architect — prefix "Ar."
+        // on their new Person record, unless they already typed it themselves.
+        const hasCoa = Boolean(doc.coaNumber && String(doc.coaNumber).trim())
+        let personName = String(doc.name || '').trim()
+        if (hasCoa && !/^ar\.?\s/i.test(personName)) {
+          personName = `Ar. ${personName}`
+        }
+
         await client.create({
           _type: 'person',
-          name: doc.name,
+          name: personName,
           slug: {_type: 'slug', current: slug},
           role: doc.role || 'Other',
           roleCustom: doc.roleCustom,
           location: doc.location,
+          mobile: doc.mobile,
+          photo: doc.photo,
+          coaNumber: hasCoa ? doc.coaNumber : undefined,
           portfolioUrl: doc.portfolioUrl,
           bio: doc.message,
         })

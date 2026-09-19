@@ -4,6 +4,8 @@ import { client } from '../../../lib/sanity'
 import { urlFor } from '../../../lib/image'
 import { courseBySlugQuery } from '../../../lib/queries'
 import { formatRole } from '../../../lib/formatRole'
+import EnrollButton from '../../../components/EnrollButton'
+import VerifiedBadge from '../../../components/VerifiedBadge'
 
 export const revalidate = 60
 
@@ -35,10 +37,14 @@ export default async function CourseDetailPage({ params }) {
       </div>
 
       <div className="detail-meta-strip">
-        {course.instructor && <div className="item"><div className="l">Instructor</div><div className="v">{course.instructor.name}</div></div>}
+        {course.instructor && <div className="item"><div className="l">Instructor</div><div className="v">{course.instructor.name}{course.instructor.coaNumber && <VerifiedBadge />}</div></div>}
         <div className="item"><div className="l">Duration</div><div className="v">{course.duration || '—'}</div></div>
         <div className="item"><div className="l">Level</div><div className="v">{course.level || '—'}</div></div>
         <div className="item"><div className="l">Price</div><div className="v">{course.isFree ? 'Free' : `₹${course.price ?? '—'}`}</div></div>
+      </div>
+
+      <div style={{margin: '28px 0 40px'}}>
+        <EnrollButton course={{title: course.title, slug: params.slug, ctaText: course.ctaText, ctaLink: course.ctaLink}} size="large" />
       </div>
 
       {course.description && (
@@ -87,7 +93,7 @@ export default async function CourseDetailPage({ params }) {
             />
           )}
           <div>
-            <h4 style={{fontSize: 16}}>{course.instructor.name}</h4>
+            <h4 style={{fontSize: 16}}>{course.instructor.name}{course.instructor.coaNumber && <VerifiedBadge />}</h4>
             <div style={{fontSize: 13, color: 'var(--grey)', marginTop: 4}}>
               {formatRole(course.instructor)}{course.instructor.location ? ` — ${course.instructor.location}` : ''}
             </div>

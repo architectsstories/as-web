@@ -5,6 +5,7 @@ import { urlFor } from '../../../lib/image'
 import { projectBySlugQuery } from '../../../lib/queries'
 import { formatRole } from '../../../lib/formatRole'
 import TrackProjectView from '../../../components/TrackProjectView'
+import VerifiedBadge from '../../../components/VerifiedBadge'
 
 export const revalidate = 60
 
@@ -62,7 +63,7 @@ export default async function ProjectDetailPage({ params }) {
                   {p.photo && <img src={urlFor(p.photo).width(120).height(120).url()} alt={p.name} />}
                 </div>
                 <div>
-                  <div className="people-side-name">{p.name}</div>
+                  <div className="people-side-name">{p.name}{p.coaNumber && <VerifiedBadge />}</div>
                   <div className="people-side-role">{formatRole(p)}</div>
                 </div>
               </Link>

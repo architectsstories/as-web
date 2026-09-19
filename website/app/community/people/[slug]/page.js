@@ -4,6 +4,7 @@ import { client } from '../../../../lib/sanity'
 import { urlFor } from '../../../../lib/image'
 import { personBySlugQuery } from '../../../../lib/queries'
 import { formatRole } from '../../../../lib/formatRole'
+import VerifiedBadge from '../../../../components/VerifiedBadge'
 
 export const revalidate = 60
 
@@ -35,7 +36,7 @@ export default async function PersonDetailPage({ params }) {
           )}
         </div>
         <div>
-          <h1 style={{fontSize: 30, textTransform: 'uppercase', marginBottom: 8}}>{person.name}</h1>
+          <h1 style={{fontSize: 30, textTransform: 'uppercase', marginBottom: 8}}>{person.name}{person.coaNumber && <VerifiedBadge />}</h1>
           <div style={{fontSize: 14.5, color: 'var(--grey)', marginBottom: 4}}>{formatRole(person)}</div>
           <div style={{fontSize: 13, color: 'var(--grey-light)', marginBottom: 20}}>{person.location}</div>
           {person.bio && (
