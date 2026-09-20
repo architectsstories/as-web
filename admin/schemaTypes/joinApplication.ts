@@ -75,6 +75,14 @@ export default defineType({
       initialValue: 'New',
     }),
     defineField({
+      name: 'personCreated',
+      title: 'Added to Community',
+      type: 'boolean',
+      readOnly: true,
+      initialValue: false,
+      description: 'Set automatically by the "Approve & Add to Community" button — not by changing Status. This is what actually tracks whether a Person draft was created, so manually setting Status to Accepted here does nothing on its own; you still need to click that button.',
+    }),
+    defineField({
       name: 'submittedAt',
       title: 'Submitted At',
       type: 'datetime',

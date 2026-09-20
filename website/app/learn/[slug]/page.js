@@ -4,6 +4,8 @@ import { client } from '../../../lib/sanity'
 import { urlFor } from '../../../lib/image'
 import { courseBySlugQuery } from '../../../lib/queries'
 import { formatRole } from '../../../lib/formatRole'
+import EnrollButton from '../../../components/EnrollButton'
+import VerifiedBadge from '../../../components/VerifiedBadge'
 
 export const revalidate = 60
 
@@ -38,12 +40,12 @@ export default async function CourseDetailPage({ params }) {
 
       <div className="detail-meta-strip">
         <div style={{display: 'flex', flexWrap: 'wrap', gap: 28}}>
-          {course.instructor && <div className="item"><div className="l">Instructor</div><div className="v">{course.instructor.name}</div></div>}
+          {course.instructor && <div className="item"><div className="l">Instructor</div><div className="v">{course.instructor.name}{course.instructor.coaNumber && <VerifiedBadge />}</div></div>}
           <div className="item"><div className="l">Duration</div><div className="v">{course.duration || '—'}</div></div>
           <div className="item"><div className="l">Level</div><div className="v">{course.level || '—'}</div></div>
           <div className="item"><div className="l">Fee</div><div className="v">{course.isFree ? 'Free' : `₹${course.price ?? '—'}`}</div></div>
         </div>
-        <CtaButton course={course} />
+        <EnrollButton course={{title: course.title, slug: params.slug, ctaText: course.ctaText, ctaLink: course.ctaLink}} />
       </div>
 
       {course.description && (
@@ -84,7 +86,7 @@ export default async function CourseDetailPage({ params }) {
           <div className="curriculum-cta-col">
             <div className="cta-glass-box">
               <div className="cta-glass-label">Ready to start?</div>
-              <CtaButton course={course} size="large" full />
+              <EnrollButton course={{title: course.title, slug: params.slug, ctaText: course.ctaText, ctaLink: course.ctaLink}} size="large" full />
             </div>
           </div>
         </div>
@@ -100,7 +102,7 @@ export default async function CourseDetailPage({ params }) {
             />
           )}
           <div>
-            <h4 style={{fontSize: 16}}>{course.instructor.name}</h4>
+            <h4 style={{fontSize: 16}}>{course.instructor.name}{course.instructor.coaNumber && <VerifiedBadge />}</h4>
             <div style={{fontSize: 13, color: 'var(--grey)', marginTop: 4}}>
               {formatRole(course.instructor)}{course.instructor.location ? ` — ${course.instructor.location}` : ''}
             </div>
@@ -113,23 +115,6 @@ export default async function CourseDetailPage({ params }) {
         </div>
       )}
     </div>
-  )
-}
-
-function CtaButton({ course, size, full }) {
-  const label = course.ctaText || 'Enroll Now'
-  const href = course.ctaLink || '#'
-  const large = size === 'large'
-
-  return (
-    <a
-      href={href}
-      target={href.startsWith('http') ? '_blank' : undefined}
-      rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-      className={`cta-btn ${large ? 'lg' : 'sm'}${full ? ' full' : ''}`}
-    >
-      {label}
-    </a>
   )
 }
 

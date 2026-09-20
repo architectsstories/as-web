@@ -59,15 +59,21 @@ npm run dev
 
 ## What's live right now
 
-- **`/submit`** — Submit Your Work form → creates a `submission` doc
+- **`/submit`** — Submit Your Work form → creates a `submission` doc.
+  Reviewing one in the Admin Panel (**"Create Draft Project"** button)
+  maps its fields onto a new `project` document **as a draft**, marked
+  Completed. That draft has no Main Image yet (forms never collect
+  uploaded files, only a Drive link) — pull the photos from the Drive
+  link, add a Main Image + Gallery, then publish from Projects.
 - **`/plans`** — Featuring & Promotion Plans (static pricing page)
 - **`/join`** — Join AS community application → creates a `joinApplication`
   doc. Asks for name, email, mobile (optional), role, and — only when role
   is **Architect** — a **COA number** (Council of Architecture
   registration). Also accepts an optional photo upload.
   - Approving an application in the Admin Panel (**"Approve & Add to
-    Community"** button) auto-creates a matching `person` document,
-    carrying across their mobile, photo, and COA number.
+    Community"** button) creates a matching `person` document **as a
+    draft**, carrying across their mobile, photo, and COA number — it
+    doesn't go live until you open it in People and publish it yourself.
   - If a COA number was given, that new Person is automatically prefixed
     **"Ar."** in their name (skipped if they already typed it themselves),
     and gets a small **blue verified badge** next to their name everywhere

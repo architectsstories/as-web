@@ -20,9 +20,9 @@ project. There's nothing to swap out before running this.
 | Module        | How it's implemented                                              |
 |----------------|---------------------------------------------------------------------|
 | Dashboard      | `@sanity/dashboard` plugin — overview widgets                       |
-| **Join Applications** | `joinApplication` schema — every "Join AS" entry from `/join`: name, email, mobile (optional), role, an optional photo, and — only relevant when Role is "Architect" — a **COA number** (hidden in the Studio form for any other role). Has a custom **"Approve & Add to Community"** button (`actions/approveAndAddPerson.ts`) that creates a matching `person` document (carrying across mobile, photo, and COA number), marks the application Accepted, and — if a COA number was given — prefixes the new Person's name with **"Ar."** (skipped if already present) |
-| **Work Submissions** | `submission` schema — every "Submit Your Work" entry from `/submit`, sorted newest first, with a `status` field (New → Contacted → Confirmed/Declined → Published) for triage |
-| **Course Enrollments** | `enrollment` schema — every "Join Now" popup entry from a course page (`/courses/[slug]`), sorted newest first, with its own `status` field (New → Contacted → Enrolled → Declined) |
+| **Join Applications** | `joinApplication` schema — every "Join AS" entry from `/join`: name, email, mobile (optional), role, an optional photo, and — only relevant when Role is "Architect" — a **COA number** (hidden in the Studio form for any other role). Has a custom **"Approve & Add to Community"** button (`actions/approveAndAddPerson.ts`) that creates a matching `person` document **as a draft** (carrying across mobile, photo, and COA number), marks the application Accepted, and — if a COA number was given — prefixes the new Person's name with **"Ar."** (skipped if already present). The draft shows up in People, ready to review and publish — nothing goes live automatically |
+| **Work Submissions** | `submission` schema — every "Submit Your Work" entry from `/submit`, sorted newest first, with a `status` field (New → Reviewed → Confirmed → Completed/Declined) for triage. Has a custom **"Create Draft Project"** button (`actions/publishSubmissionAsProject.ts`) that maps title/studio/location/category/area/year/description onto a new `project` document **as a draft** and marks the submission Completed. That draft has no Main Image yet — a submission only ever has a Drive link, never an uploaded file — so it can't be published until someone opens it, pulls the real photos from that Drive link, adds a Main Image (required) and Gallery, and publishes from Projects |
+| **Course Enrollments** | `enrollment` schema — every "Join Now" popup entry from a course page (`/courses/[slug]`), sorted newest first, with its own `status` field (New → Contacted → Enrolled → Declined). The popup itself lives in `website/components/EnrollButton.js` (name, email, phone, message) → `website/app/api/enroll/route.js` |
 | Projects       | `project` schema (title, studio, location, category, gallery, `viewCount`, `showInLatestStories`...). The public `/stories` pages are just Projects with that last toggle on — there's no separate content type behind them |
 | Courses        | `course` schema (title, instructor, curriculum modules, price, optional `ctaText`/`ctaLink` to point "Join Now" at an external link instead of the built-in popup) |
 | People         | `person` schema — instructors, and everyone in the community directory (including anyone approved from Join Applications). Fields include: **Enable Person on Website** (`isEnabled`, default on — off hides them everywhere: Community, their profile, homepage features, course instructor credit, project Community cards, all without deleting them), **Mobile Number** (optional, never shown publicly), **COA Number** (optional — presence of this alone drives the blue verified badge shown next to their name site-wide; set it directly here for anyone added by hand, no need to go through Join Applications), and **Related Projects** (link to any published Projects; shown on their own profile page, and in reverse — that project's page lists this person in its Community card) |
@@ -40,6 +40,42 @@ regular attention.
 > `deskStructure.ts`), and the website doesn't query it either — it's dead
 > code left over from an earlier direction. Safe to delete, or safe to
 > ignore; either way it currently does nothing.
+
+## The "approve → draft → review → publish" pattern
+
+Both custom actions above follow the same shape, on purpose:
+
+1. Someone fills out a public form (`/join` or `/submit`).
+2. You review their entry in the Admin Panel and click the custom button.
+3. That **creates a new document as a draft** — its `_id` is prefixed
+   `drafts.` — and marks the original application/submission as
+   processed.
+4. The draft shows up in People or Projects like any other draft. Nothing
+   is live yet. Open it, fill in whatever the form couldn't capture
+   (a Person doesn't need anything extra; a Project needs a Main Image at
+   minimum, since forms never collect an uploaded file — only a Drive
+   link), and hit **Publish** yourself when it's ready.
+5. Only that manual Publish makes it appear on the website.
+
+This means nothing from a public form ever goes live without a human
+looking at it first — the automation only does the tedious retyping, not
+the judgment call.
+
+**Important: click the button — don't just change Status by hand.**
+Setting Status to "Accepted" (Join Applications) or "Completed" (Work
+Submissions) by itself does nothing except change that field. Whether the
+Person or Project draft actually got created is tracked separately, by a
+read-only **"Added to Community"** / **"Sent to Projects"** checkbox
+further down the same document — that's what the button actually sets,
+alongside Status, when it runs. If you edit Status manually first and then
+look for the button, it'll still say "Approve & Add to Community" /
+"Create Draft Project" and will still work correctly when clicked — the
+button's own completed-state is independent of whatever you've set Status
+to by hand.
+
+The button itself isn't a separate prominent action in this Studio
+version — look for it in the **"···" menu** at the bottom right, next to
+the Publish button.
 
 ## The verified badge, in full
 

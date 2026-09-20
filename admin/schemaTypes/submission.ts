@@ -67,6 +67,15 @@ export default defineType({
       options: {list: ['New', 'Reviewed', 'Confirmed', 'Completed', 'Declined'], layout: 'radio'},
       initialValue: 'New',
     }),
+    defineField({
+      name: 'projectCreated',
+      title: 'Sent to Projects',
+      type: 'boolean',
+      group: 'admin',
+      readOnly: true,
+      initialValue: false,
+      description: 'Set automatically by the "Create Draft Project" button — not by changing Status. This is what actually tracks whether a Project draft was created, so manually setting Status to Completed here does nothing on its own; you still need to click that button.',
+    }),
     defineField({name: 'submittedAt', title: 'Submitted At', type: 'datetime', group: 'admin', readOnly: true}),
   ],
   orderings: [

@@ -7,6 +7,7 @@ import {media} from 'sanity-plugin-media'
 import {schemaTypes} from './schemaTypes'
 import {deskStructure} from './structure/deskStructure'
 import {approveAndAddPersonAction} from './actions/approveAndAddPerson'
+import {publishSubmissionAsProjectAction} from './actions/publishSubmissionAsProject'
 
 export default defineConfig({
   name: 'default',
@@ -30,6 +31,9 @@ export default defineConfig({
     actions: (prev, context) => {
       if (context.schemaType === 'joinApplication') {
         return [...prev, approveAndAddPersonAction]
+      }
+      if (context.schemaType === 'submission') {
+        return [...prev, publishSubmissionAsProjectAction]
       }
       return prev
     },
