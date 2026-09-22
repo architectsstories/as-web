@@ -476,3 +476,19 @@ footer{padding:30px 0;border-top:1px solid var(--line);}
 .modal-title{font-size:20px;text-transform:uppercase;margin-bottom:8px;padding-right:30px;}
 .modal-sub{font-size:13.5px;color:var(--grey);margin-bottom:24px;}
 @media(max-width:640px){.modal-box{padding:30px 22px;}}
+
+
+/* Course detail: benefits + outcome, placed after curriculum */
+.course-extra-section{margin:0 0 48px;padding:44px 0 0;border-top:1px solid var(--line);}
+.course-benefits-block{padding-bottom:44px;border-bottom:1px solid var(--line);}
+.course-tools-block{padding-top:44px;}
+.course-extra-heading{display:flex;align-items:baseline;gap:18px;margin-bottom:26px;}
+.course-extra-heading>span{font-size:11px;color:var(--red);font-weight:700;letter-spacing:.08em;}
+.course-extra-heading h2{margin:0;font-size:clamp(25px,3vw,34px);line-height:1.1;text-transform:uppercase;letter-spacing:-.02em;}
+.course-benefits-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);}
+.course-benefit-item{display:grid;grid-template-columns:42px 1fr;gap:14px;padding:18px 8px 18px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.55;}
+.course-benefit-index{font-size:11px;color:var(--red);font-weight:700;padding-top:2px;}
+.course-tools-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--grey-light);margin-bottom:14px;}
+.course-tools-list{display:flex;flex-wrap:wrap;gap:10px;}
+.course-tool-pill{border:1px solid var(--line);padding:13px 16px;font-size:14px;font-weight:600;background:var(--off);}
+@media(max-width:700px){.course-extra-section{padding-top:32px;margin-bottom:36px;}.course-benefits-block{padding-bottom:32px}.course-tools-block{padding-top:32px}.course-extra-heading{gap:12px;margin-bottom:20px}.course-benefits-grid{grid-template-columns:1fr}.course-benefit-item{grid-template-columns:34px 1fr}.course-tool-pill{padding:11px 13px;font-size:13px}}

@@ -44,10 +44,9 @@ shows up in the Admin Panel.
   (optional), role, an optional photo (uploaded as a real Sanity image
   asset — the client reads the file as a data URL and the API route
   decodes + uploads it via `writeClient.assets.upload`), and — only shown
-  when Role is "Architect" — a COA number. In the Admin Panel, approving
-  one auto-creates a matching `person` document via a custom Studio
-  action, carrying the mobile/photo/COA number across and prefixing "Ar."
-  onto the name if a COA number was given.
+  when Role is "Architect" — a COA number. Turning it into a `person` is
+  handled entirely inside the Admin Panel — see `admin/README.md`, "The
+  approve → draft → review → publish pattern."
 - **Course "Join Now" popup** (`components/EnrollButton.js` →
   `app/api/enroll/route.js`) → creates an `enrollment` document, tagged
   with which course it came from. Skipped entirely if that course has a

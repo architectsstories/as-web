@@ -83,6 +83,43 @@ export default async function CourseDetailPage({ params }) {
         </div>
       )}
 
+
+      {(course.benefits?.length > 0 || course.tools?.length > 0) && (
+        <section className="course-extra-section">
+          {course.benefits?.length > 0 && (
+            <div className="course-benefits-block">
+              <div className="course-extra-heading">
+                <span>01</span>
+                <h2>Course Benefits</h2>
+              </div>
+              <div className="course-benefits-grid">
+                {course.benefits.map((benefit, i) => (
+                  <div key={i} className="course-benefit-item">
+                    <span className="course-benefit-index">{String(i + 1).padStart(2, '0')}</span>
+                    <span>{benefit}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {course.tools?.length > 0 && (
+            <div className="course-tools-block">
+              <div className="course-extra-heading">
+                <span>02</span>
+                <h2>Course Outcome</h2>
+              </div>
+              <div className="course-tools-label">Tools</div>
+              <div className="course-tools-list">
+                {course.tools.map((tool, i) => (
+                  <span key={i} className="course-tool-pill">{tool}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
       {course.instructor && (
         <div style={{display: 'flex', gap: 20, alignItems: 'center', padding: 28, background: 'var(--off)', borderRadius: 2, marginBottom: 40}}>
           {course.instructor.photo && (

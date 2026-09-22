@@ -54,7 +54,7 @@ export const allCoursesQuery = `*[_type == "course"] | order(_createdAt desc){
 }`
 
 export const courseBySlugQuery = `*[_type == "course" && slug.current == $slug][0]{
-  title, category, thumbnail, bannerImage, price, isFree, level, duration, description, outcomes, curriculum, ctaText, ctaLink,
+  title, category, thumbnail, bannerImage, price, isFree, level, duration, description, benefits, tools, outcomes, curriculum, ctaText, ctaLink,
   "instructor": select(instructor && instructor->isEnabled != false => instructor->{name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl, coaNumber})
 }`
 

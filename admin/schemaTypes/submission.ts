@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {SubmissionApprovalPanel} from '../components/SubmissionApprovalPanel'
 
 export default defineType({
   name: 'submission',
@@ -69,12 +70,13 @@ export default defineType({
     }),
     defineField({
       name: 'projectCreated',
-      title: 'Sent to Projects',
+      title: 'Project Actions',
       type: 'boolean',
       group: 'admin',
       readOnly: true,
       initialValue: false,
-      description: 'Set automatically by the "Create Draft Project" button — not by changing Status. This is what actually tracks whether a Project draft was created, so manually setting Status to Completed here does nothing on its own; you still need to click that button.',
+      description: 'Two buttons below: Publish (saves this submission as-is) and Create Draft Project (maps its fields onto a new draft Project and publishes this submission as Completed). This field just stores whether the second one has already run, so it can\u2019t create a duplicate.',
+      components: {input: SubmissionApprovalPanel},
     }),
     defineField({name: 'submittedAt', title: 'Submitted At', type: 'datetime', group: 'admin', readOnly: true}),
   ],

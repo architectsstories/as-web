@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {JoinApprovalPanel} from '../components/JoinApprovalPanel'
 
 export default defineType({
   name: 'joinApplication',
@@ -71,16 +72,17 @@ export default defineType({
       name: 'status',
       title: 'Status',
       type: 'string',
-      options: {list: ['New', 'Reviewed', 'Accepted', 'Declined'], layout: 'radio'},
+      options: {list: ['New', 'Reviewed', 'Approved', 'Declined'], layout: 'radio'},
       initialValue: 'New',
     }),
     defineField({
       name: 'personCreated',
-      title: 'Added to Community',
+      title: 'Community Actions',
       type: 'boolean',
       readOnly: true,
       initialValue: false,
-      description: 'Set automatically by the "Approve & Add to Community" button — not by changing Status. This is what actually tracks whether a Person draft was created, so manually setting Status to Accepted here does nothing on its own; you still need to click that button.',
+      description: 'Two buttons below: Publish (saves this application as-is) and Approve & Add to Community (creates a draft Person and publishes this application as Approved). This field just stores whether the second one has already run, so it can\u2019t create a duplicate.',
+      components: {input: JoinApprovalPanel},
     }),
     defineField({
       name: 'submittedAt',

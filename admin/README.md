@@ -20,8 +20,8 @@ project. There's nothing to swap out before running this.
 | Module        | How it's implemented                                              |
 |----------------|---------------------------------------------------------------------|
 | Dashboard      | `@sanity/dashboard` plugin — overview widgets                       |
-| **Join Applications** | `joinApplication` schema — every "Join AS" entry from `/join`: name, email, mobile (optional), role, an optional photo, and — only relevant when Role is "Architect" — a **COA number** (hidden in the Studio form for any other role). Has a custom **"Approve & Add to Community"** button (`actions/approveAndAddPerson.ts`) that creates a matching `person` document **as a draft** (carrying across mobile, photo, and COA number), marks the application Accepted, and — if a COA number was given — prefixes the new Person's name with **"Ar."** (skipped if already present). The draft shows up in People, ready to review and publish — nothing goes live automatically |
-| **Work Submissions** | `submission` schema — every "Submit Your Work" entry from `/submit`, sorted newest first, with a `status` field (New → Reviewed → Confirmed → Completed/Declined) for triage. Has a custom **"Create Draft Project"** button (`actions/publishSubmissionAsProject.ts`) that maps title/studio/location/category/area/year/description onto a new `project` document **as a draft** and marks the submission Completed. That draft has no Main Image yet — a submission only ever has a Drive link, never an uploaded file — so it can't be published until someone opens it, pulls the real photos from that Drive link, adds a Main Image (required) and Gallery, and publishes from Projects |
+| **Join Applications** | `joinApplication` schema — every "Join AS" entry from `/join`: name, email, mobile (optional), role, an optional photo, and — only relevant when Role is "Architect" — a **COA number** (hidden in the Studio form for any other role). Has two always-visible buttons — Publish, and **Approve & Add to Community** — see "The approve → draft → review → publish pattern" below. If a COA number was given, the new Person's name is prefixed **"Ar."** (skipped if already present) |
+| **Work Submissions** | `submission` schema — every "Submit Your Work" entry from `/submit`, sorted newest first, with a `status` field (New → Reviewed → Confirmed → Completed/Declined) for triage. Has the same two-button panel — Publish, and **Create Draft Project**. That draft has no Main Image yet — a submission only ever has a Drive link, never an uploaded file — so it can't be published until someone opens it, pulls the real photos from that Drive link, adds a Main Image (required) and Gallery, and publishes from Projects |
 | **Course Enrollments** | `enrollment` schema — every "Join Now" popup entry from a course page (`/courses/[slug]`), sorted newest first, with its own `status` field (New → Contacted → Enrolled → Declined). The popup itself lives in `website/components/EnrollButton.js` (name, email, phone, message) → `website/app/api/enroll/route.js` |
 | Projects       | `project` schema (title, studio, location, category, gallery, `viewCount`, `showInLatestStories`...). The public `/stories` pages are just Projects with that last toggle on — there's no separate content type behind them |
 | Courses        | `course` schema (title, instructor, curriculum modules, price, optional `ctaText`/`ctaLink` to point "Join Now" at an external link instead of the built-in popup) |
@@ -43,39 +43,49 @@ regular attention.
 
 ## The "approve → draft → review → publish" pattern
 
-Both custom actions above follow the same shape, on purpose:
+**Two plain buttons, always both visible, side by side — no menu, no
+swapping, no toggle to puzzle over.**
+
+Both `joinApplication` and `submission` documents have a small panel
+further down the form (where a plain on/off toggle used to be) with two
+real buttons in it:
+
+| Document | Left button | Right button |
+|---|---|---|
+| Join Application | **Publish** — saves the application as-is | **Approve & Add to Community** — creates a draft Person, publishes the application as Approved |
+| Work Submission | **Publish** — saves the submission as-is | **Create Draft Project** — creates a draft Project, publishes the submission as Completed |
+
+That's the whole interaction:
 
 1. Someone fills out a public form (`/join` or `/submit`).
-2. You review their entry in the Admin Panel and click the custom button.
-3. That **creates a new document as a draft** — its `_id` is prefixed
-   `drafts.` — and marks the original application/submission as
-   processed.
-4. The draft shows up in People or Projects like any other draft. Nothing
-   is live yet. Open it, fill in whatever the form couldn't capture
-   (a Person doesn't need anything extra; a Project needs a Main Image at
-   minimum, since forms never collect an uploaded file — only a Drive
-   link), and hit **Publish** yourself when it's ready.
-5. Only that manual Publish makes it appear on the website.
+2. You open their entry, review it, and either:
+   - Click **Publish** if you just want to save changes without deciding
+     yet (add a note, fix a typo, whatever) — behaves exactly like the
+     Publish button anywhere else in Sanity.
+   - Click **Approve & Add to Community** / **Create Draft Project** when
+     you're ready to move them forward. This one click does three things:
+     creates the new document **as a draft** (its `_id` is prefixed
+     `drafts.`), sets Status to Approved/Completed, and publishes the
+     application/submission itself — all in one action.
+3. That new draft is not live yet. Open it in People or Projects, fill in
+   whatever the form couldn't capture (a Person doesn't need anything
+   extra; a Project needs a Main Image at minimum, since forms never
+   collect an uploaded file — only a Drive link), and hit **Publish** on
+   *that* document too when it's ready.
 
-This means nothing from a public form ever goes live without a human
-looking at it first — the automation only does the tedious retyping, not
-the judgment call.
+Only that second, separate Publish (step 3) makes it appear on the
+website — nothing from a public form ever goes live without a human
+looking at it first.
 
-**Important: click the button — don't just change Status by hand.**
-Setting Status to "Accepted" (Join Applications) or "Completed" (Work
-Submissions) by itself does nothing except change that field. Whether the
-Person or Project draft actually got created is tracked separately, by a
-read-only **"Added to Community"** / **"Sent to Projects"** checkbox
-further down the same document — that's what the button actually sets,
-alongside Status, when it runs. If you edit Status manually first and then
-look for the button, it'll still say "Approve & Add to Community" /
-"Create Draft Project" and will still work correctly when clicked — the
-button's own completed-state is independent of whatever you've set Status
-to by hand.
+Once the right-hand button has run, it turns into a plain confirmation —
+**"Already Added to Community ✓"** / **"Already Sent to Projects ✓"** —
+and disables itself, so clicking around afterward can't create a second,
+duplicate draft. The left-hand Publish button is completely unaffected by
+this and keeps working normally regardless.
 
-The button itself isn't a separate prominent action in this Studio
-version — look for it in the **"···" menu** at the bottom right, next to
-the Publish button.
+Both buttons are always there, regardless of what Status is currently set
+to — there's nothing conditional to figure out, and nothing hidden in the
+Studio's "···" menu, a dropdown, or anywhere else.
 
 ## The verified badge, in full
 

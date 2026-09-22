@@ -112,6 +112,22 @@ export default defineType({
       of: [{type: 'block'}],
     }),
     defineField({
+      name: 'benefits',
+      title: 'Course Benefits',
+      description: 'Benefits included with the course. Add, remove, or reorder items as needed.',
+      type: 'array',
+      group: 'content',
+      of: [{type: 'string'}],
+    }),
+    defineField({
+      name: 'tools',
+      title: 'Course Outcome — Tools',
+      description: 'Tools covered or used in the course.',
+      type: 'array',
+      group: 'content',
+      of: [{type: 'string'}],
+    }),
+    defineField({
       name: 'outcomes',
       title: "What You'll Learn",
       type: 'array',
