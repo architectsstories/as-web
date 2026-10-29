@@ -85,6 +85,18 @@ export default defineType({
       type: 'array',
       group: 'content',
       of: [{type: 'block'}],
+      description: 'Write the project story: the brief and site context, key design decisions, materials or environmental strategies, and how the spaces work. A few image captions or a list of specifications is not enough. Aim for at least 700 characters; this is an editorial guideline, not an AdSense word-count rule.',
+      validation: (Rule) => Rule.custom((blocks) => {
+        const text = Array.isArray(blocks)
+          ? blocks
+              .filter((block) => block?._type === 'block' && Array.isArray(block.children))
+              .flatMap((block) => block.children.map((span) => span.text || ''))
+              .join(' ')
+              .trim()
+          : ''
+
+        return text.length >= 700 || 'Add a fuller project narrative with context, design decisions and outcomes.'
+      }).warning(),
     }),
     defineField({
       name: 'isFeatured',

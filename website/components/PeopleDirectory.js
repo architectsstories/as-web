@@ -74,6 +74,7 @@ export default function PeopleDirectory({ people, initialQuery = '', initialLoca
               <h4>{p.name}{p.coaNumber && <VerifiedBadge />}</h4>
               {formatRole(p) && <div className="role">{formatRole(p)}</div>}
               {p.location && <div className="loc">{p.location}</div>}
+              {p.bio && <p className="person-bio">{p.bio}</p>}
             </Link>
           ))}
         </div>

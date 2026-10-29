@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { client } from '../../lib/sanity'
 import { urlFor } from '../../lib/image'
 import { allProjectsQuery } from '../../lib/queries'
+import { excerptFromBlocks } from '../../lib/excerpt'
 
 export const revalidate = 60
 
@@ -28,6 +29,7 @@ export default async function ProjectsPage() {
                 <span className="cat">{p.category}</span>
                 <h4>{p.title}</h4>
                 <div className="sub">{p.studio}</div>
+                {excerptFromBlocks(p.description, 220) && <p className="card-excerpt">{excerptFromBlocks(p.description, 220)}</p>}
                 <div className="meta">{p.location}{p.area ? ` — ${p.area}` : ''}{p.year ? ` · ${p.year}` : ''}</div>
               </Link>
             ))}

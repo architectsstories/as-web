@@ -20,7 +20,7 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
 }`
 
 export const allProjectsQuery = `*[_type == "project"] | order(year desc){
-  title, "slug": slug.current, studio, location, category, area, year, mainImage
+  title, "slug": slug.current, studio, location, category, area, year, mainImage, description
 }`
 
 export const projectBySlugQuery = `*[_type == "project" && slug.current == $slug][0]{
@@ -43,7 +43,7 @@ export const recentProjectsQuery = `*[_type == "project"] | order(_createdAt des
 // "Stories" on the website is powered by Projects with "Show in Latest
 // Stories" toggled on — there is no separate Story content type.
 export const allStoriesQuery = `*[_type == "project" && showInLatestStories == true] | order(_createdAt desc){
-  title, "slug": slug.current, studio, location, category, area, year, mainImage
+  title, "slug": slug.current, studio, location, category, area, year, mainImage, description
 }`
 
 export const storyBySlugQuery = `*[_type == "project" && slug.current == $slug && showInLatestStories == true][0]{
@@ -51,7 +51,7 @@ export const storyBySlugQuery = `*[_type == "project" && slug.current == $slug &
 }`
 
 export const allCoursesQuery = `*[_type == "course"] | order(_createdAt desc){
-  title, "slug": slug.current, category, thumbnail, price, isFree, level, duration, mode,
+  title, "slug": slug.current, category, thumbnail, price, isFree, level, duration, mode, description,
   "instructor": select(instructor && instructor->isEnabled != false => instructor->{name})
 }`
 
@@ -69,7 +69,7 @@ export const pastEventsQuery = `*[_type == "event" && startDateTime < now()] | o
 }`
 
 export const allPeopleQuery = `*[_type == "person" && isEnabled != false] | order(name asc){
-  name, "slug": slug.current, role, roleSecondary, roleCustom, location, photo, coaNumber
+  name, "slug": slug.current, role, roleSecondary, roleCustom, location, photo, coaNumber, bio
 }`
 
 export const personBySlugQuery = `*[_type == "person" && slug.current == $slug && isEnabled != false][0]{

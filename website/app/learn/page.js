@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { client } from '../../lib/sanity'
 import { allCoursesQuery } from '../../lib/queries'
+import { excerptFromBlocks } from '../../lib/excerpt'
 
 export const revalidate = 60
 
@@ -26,6 +27,7 @@ export default async function CoursesPage() {
                 </div>
                 <h4>{c.title}</h4>
                 <div className="learn-page-meta">{c.duration || ''}</div>
+                {excerptFromBlocks(c.description, 220) && <p className="card-excerpt">{excerptFromBlocks(c.description, 220)}</p>}
                 <Link className="learn-page-cta" href={`/learn/${c.slug}`}>View Programme Breakdown</Link>
               </div>
             ))}

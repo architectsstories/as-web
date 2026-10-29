@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { client } from '../../lib/sanity'
 import { urlFor } from '../../lib/image'
 import { allStoriesQuery } from '../../lib/queries'
+import { excerptFromBlocks } from '../../lib/excerpt'
 
 export const revalidate = 60
 
@@ -27,6 +28,7 @@ export default async function StoriesPage() {
                 <span className="cat">{s.category}</span>
                 <h4>{s.title}</h4>
                 <div className="sub">{s.studio}</div>
+                {excerptFromBlocks(s.description, 220) && <p className="card-excerpt">{excerptFromBlocks(s.description, 220)}</p>}
                 <div className="meta">{s.location}{s.year ? ` · ${s.year}` : ''}</div>
               </Link>
             ))}

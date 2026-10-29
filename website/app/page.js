@@ -300,7 +300,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* PEOPLE MAKE PLACES (static stats band) */}
+      {/* PEOPLE MAKE PLACES */}
       <section id="community-band">
         <div className="wrap">
           <div className="band-grid">
@@ -311,26 +311,22 @@ export default async function HomePage() {
               <Link className="band-cta" href="/#find">Join AS Community →</Link>
             </div>
             <div className="band-stats">
-              <div className="band-stat"><div className="n">9K+</div><div className="l">Creators</div></div>
-              <div className="band-stat"><div className="n">500+</div><div className="l">Projects</div></div>
-              <div className="band-stat"><div className="n">50+</div><div className="l">Practices</div></div>
-              <div className="band-stat"><div className="n">10+</div><div className="l">Learning Programs</div></div>
+              <Link className="band-stat" href="/projects"><div className="n">Projects</div><div className="l">Built work and studio stories</div></Link>
+              <Link className="band-stat" href="/community"><div className="n">Community</div><div className="l">People across architecture and design</div></Link>
+              <Link className="band-stat" href="/learn"><div className="n">Learning</div><div className="l">Courses and practical programmes</div></Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* WEEKLY NEWSLETTER (static) */}
+      {/* WEEKLY NEWSLETTER */}
       <section id="weekly">
         <div className="wrap">
           <div className="weekly-grid">
             <div className="weekly-left">
               <div className="eyebrow-dot"><span className="dot" /><h3 style={{display: 'inline'}}>The AS Weekly<span className="red">.</span></h3></div>
-              <p>Architecture worth knowing. Delivered once a week.</p>
-              <div className="weekly-form">
-                <input type="email" placeholder="Your email address" />
-                <button>Subscribe</button>
-              </div>
+              <p>Architecture worth knowing. Contact us if you would like to hear about future editions.</p>
+              <a className="weekly-subscribe" href="mailto:architectsstories@gmail.com?subject=AS%20Weekly%20updates">Ask about The AS Weekly â†’</a>
             </div>
             <div className="weekly-right">
               <nav>
@@ -338,11 +334,6 @@ export default async function HomePage() {
                 <Link href="/learn">Learn</Link>
                 <Link href="/community">Community</Link>
               </nav>
-              <div className="socials">
-                <a href="#">◎</a>
-                <a href="#">▶</a>
-                <a href="#">in</a>
-              </div>
             </div>
           </div>
         </div>
