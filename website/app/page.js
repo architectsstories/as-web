@@ -1,31 +1,27 @@
 import Link from 'next/link'
 import { client } from '../lib/sanity'
 import { urlFor } from '../lib/image'
-import { homepageQuery, popularProjectsQuery, recentProjectsQuery } from '../lib/queries'
-import { formatRole } from '../lib/formatRole'
+import { homepageQuery, recentProjectsQuery } from '../lib/queries'
 import { excerptFromBlocks } from '../lib/excerpt'
+import { formatRole } from '../lib/formatRole'
 import HeroCarousel from '../components/HeroCarousel'
-import PopularPostsScroller from '../components/PopularPostsScroller'
 import PublicationCard from '../components/PublicationCard'
-import VerifiedBadge from '../components/VerifiedBadge'
 
 export const revalidate = 60 // re-fetch from Sanity at most once a minute
 
 export default async function HomePage() {
-  const [data, popularRaw, recentRaw] = await Promise.all([
+  const [data, recentRaw] = await Promise.all([
     client.fetch(homepageQuery),
-    client.fetch(popularProjectsQuery),
     client.fetch(recentProjectsQuery),
   ])
 
-  const popularPosts = popularRaw.map((p) => ({ ...p, excerpt: excerptFromBlocks(p.description) }))
   const recentPosts = recentRaw.map((p) => ({ ...p, excerpt: excerptFromBlocks(p.description) }))
 
   const heroSlides = data?.heroSlides || []
-  const projects = data?.featuredProjects || []
   const latestProjects = data?.latestProjects || [] // newest projects, shown automatically in "Latest Stories"
   const courses = data?.featuredCourses || []
-  const people = data?.featuredPeople || []
+  const vendors = data?.featuredVendors || [] // curated in Admin Panel → Featured → Vendors & Brands
+  const professionals = data?.featuredIndustryProfessionals || [] // curated in Admin Panel → Featured → Industry Professionals
 
   return (
     <>
@@ -80,51 +76,91 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* FEATURED PROJECTS */}
-      <section id="projects" style={{background: 'var(--off)'}}>
+      {/* THE ARCHITECTURE ECOSYSTEM (static) */}
+      <section id="ecosystem">
+        <div className="wrap">
+          <div className="section-head">
+            <div className="eyebrow-dot"><span className="dot" /><h2>The Architecture Ecosystem<span className="red">.</span></h2></div>
+            <Link className="head-btn" href="/join">Join the Ecosystem →</Link>
+          </div>
+
+          <div className="eco-grid">
+            <Link className="eco-card" href="/community?category=Architects">
+              <h3>Architects &amp; Firms</h3>
+              <p>Firms, architects and young practices building their body of work.</p>
+              <span className="arrow-circle">→</span>
+            </Link>
+            <Link className="eco-card" href="/community?category=Material%20Brands">
+              <h3>Vendors &amp; Brands</h3>
+              <p>Materials, lighting, furniture, surfaces, hardware and technology.</p>
+              <span className="arrow-circle">→</span>
+            </Link>
+            <Link className="eco-card" href="/community?category=Makers">
+              <h3>Industry Professionals</h3>
+              <p>Visualisers, photographers, consultants, contractors and fabricators.</p>
+              <span className="arrow-circle">→</span>
+            </Link>
+            <Link className="eco-card" href="/community">
+              <h3>Community</h3>
+              <p>Learning, opportunities and events for the next generation.</p>
+              <span className="arrow-circle">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED VENDORS & BRANDS — curated in Admin Panel / Featured */}
+      <section id="vendors">
         <div className="wrap">
           <div className="section-head">
             <div>
-              <div className="eyebrow-dot"><span className="dot" /><h2>Featured Projects</h2></div>
-              <p className="section-lede">Exceptional spaces. Thoughtful ideas. Stories worth exploring.</p>
+              <div className="eyebrow-dot"><span className="dot" /><h2>Featured Vendors &amp; Brands</h2></div>
+              <p className="section-lede">Materials, lighting, furniture and surfaces — trusted by studios featured on AS.</p>
             </div>
-            <Link className="view-all" href="/projects">Explore All Projects →</Link>
+            <Link className="view-all" href="/community?category=Material%20Brands">Explore All Vendors →</Link>
           </div>
-          {projects.length === 0 ? (
-            <div className="empty-state">No featured projects yet — add some in the Admin Panel's Featured module.</div>
+
+          {vendors.length === 0 ? (
+            <div className="empty-state">No featured vendors yet — add some in the Admin Panel's Featured module (Vendors &amp; Brands).</div>
           ) : (
-            <div className="proj-grid">
-              {projects[0] && (
-                <div className="proj-lead">
-                  <Link href={`/projects/${projects[0].slug}`}>
-                    <div className="thumb-main">
-                      {projects[0].mainImage && (
-                        <img src={urlFor(projects[0].mainImage).width(900).height(650).url()} alt={projects[0].title} />
+            <div className="vendor-layout">
+              <Link className="vendor-spotlight" href={`/community/people/${vendors[0].slug}`}>
+                <div
+                  className="shot"
+                  style={vendors[0].photo ? { backgroundImage: `url(${urlFor(vendors[0].photo).width(900).height(560).url()})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+                >
+                  <span className="brand-chip">{vendors[0].name}</span>
+                </div>
+                <div className="info">
+                  <div className="cat">{vendors[0].roleCustom || formatRole(vendors[0])}</div>
+                  <h3>Featured Brand of the Month</h3>
+                  <p>{vendors[0].bio || `Trusted by studios featured on AS${vendors[0].location ? ` — ${vendors[0].location}` : ''}.`}</p>
+                  <span className="explore">View Profile →</span>
+                </div>
+              </Link>
+
+              <div className="vendor-mini-grid">
+                {vendors.slice(1, 5).map((v) => (
+                  <Link className="vendor-mini" key={v.slug} href={`/community/people/${v.slug}`}>
+                    <div className="logo-row">
+                      {v.photo ? (
+                        <img src={urlFor(v.photo).width(160).height(112).url()} alt={v.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+                      ) : (
+                        <span>{v.name}</span>
                       )}
                     </div>
-                  </Link>
-                  <div className="info">
-                    <h3>{projects[0].title}</h3>
-                    <p className="studio">{projects[0].studio}</p>
-                    <p className="meta">{[projects[0].location, projects[0].category].filter(Boolean).join(' — ')}{projects[0].area ? ` · ${projects[0].area}` : ''}</p>
-                    <Link className="explore" href={`/projects/${projects[0].slug}`}>Explore Project →</Link>
-                  </div>
-                </div>
-              )}
-              <div className="proj-mini-grid">
-                {projects.slice(1, 5).map((p) => (
-                  <Link key={p.slug} className="proj-mini" href={`/projects/${p.slug}`}>
-                    <div className="thumb">
-                      {p.mainImage && <img src={urlFor(p.mainImage).width(560).height(385).url()} alt={p.title} />}
-                    </div>
-                    <h4>{p.title}</h4>
-                    <p className="studio">{p.studio}</p>
-                    <p className="meta">{[p.location, p.category].filter(Boolean).join(' — ')}</p>
+                    <h4>{v.name}</h4>
+                    <div className="cat">{v.roleCustom || formatRole(v)}</div>
                   </Link>
                 ))}
               </div>
             </div>
           )}
+
+          <div className="vendor-cta-row">
+            <p>Are you a materials or product brand studios should know about?</p>
+            <Link href="/submit">List Your Brand →</Link>
+          </div>
         </div>
       </section>
 
@@ -158,62 +194,60 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* POPULAR POSTS — auto-ranked by project page views, no curation needed */}
-      {popularPosts.length > 0 && (
-        <section id="popular">
-          <div className="wrap">
-            <PopularPostsScroller posts={popularPosts} />
-          </div>
-        </section>
-      )}
-
-      {/* RECENTLY PUBLISHED — auto-sorted by publish date, newest first, no curation needed */}
-      {recentPosts.length > 0 && (
-        <section id="recent" style={{background: 'var(--off)'}}>
-          <div className="wrap">
-            <div className="section-head">
-              <div>
-                <div className="eyebrow-dot"><span className="dot" /><h2>Recently Published</h2></div>
-                <p className="section-lede">Fresh off the press — newest projects first.</p>
-              </div>
-              <Link className="view-all" href="/projects">View all</Link>
-            </div>
-            <div className="pub-grid-4">
-              {recentPosts.map((p) => (
-                <PublicationCard key={p.slug} post={p} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* PEOPLE */}
-      <section id="community">
+      {/* INDUSTRY PROFESSIONALS — curated in Admin Panel / Featured */}
+      <section id="professionals">
         <div className="wrap">
           <div className="section-head">
-            <div className="eyebrow-dot"><span className="dot" /><h2>People Behind the Spaces</h2></div>
+            <div>
+              <div className="eyebrow-dot"><span className="dot" /><h2>Industry Professionals</h2></div>
+              <p className="section-lede">Visualisers, photographers, contractors, fabricators and landscape designers trusted by studios on AS.</p>
+            </div>
+            <Link className="view-all" href="/community?category=Makers">Explore All Industry Professionals →</Link>
           </div>
-          {people.length === 0 ? (
-            <div className="empty-state">No featured people yet — add some in the Admin Panel's Featured module.</div>
+
+          {professionals.length === 0 ? (
+            <div className="empty-state">No featured professionals yet — add some in the Admin Panel's Featured module (Industry Professionals).</div>
           ) : (
-            <div className="people-grid">
-              {people.map((p) => (
-                <div className="person" key={p.name}>
-                  <div className="ph">
-                    {p.photo && <img src={urlFor(p.photo).width(500).height(525).url()} alt={p.name} />}
-                  </div>
-                  <h4>{p.name}{p.coaNumber && <VerifiedBadge />}</h4>
-                  <p className="role">{formatRole(p)}</p>
-                  <p className="loc">{p.location}</p>
+            <div className="spec-layout">
+              <Link className="spec-spotlight" href={`/community/people/${professionals[0].slug}`}>
+                <div
+                  className="shot"
+                  style={professionals[0].photo ? { backgroundImage: `url(${urlFor(professionals[0].photo).width(900).height(560).url()})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+                >
+                  <span className="brand-chip">{professionals[0].name}</span>
                 </div>
-              ))}
+                <div className="info">
+                  <div className="cat">{professionals[0].roleCustom || formatRole(professionals[0])}</div>
+                  <h3>Featured Professional of the Month</h3>
+                  <p>{professionals[0].bio || `Trusted by studios featured on AS${professionals[0].location ? ` — ${professionals[0].location}` : ''}.`}</p>
+                  <span className="explore">View Profile →</span>
+                </div>
+              </Link>
+
+              <div className="spec-mini-grid">
+                {professionals.slice(1, 5).map((p) => (
+                  <Link className="spec-mini" key={p.slug} href={`/community/people/${p.slug}`}>
+                    <div
+                      className="avatar-row"
+                      style={p.photo ? { backgroundImage: `url(${urlFor(p.photo).width(112).height(112).url()})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+                    />
+                    <h4>{p.name}</h4>
+                    <div className="cat">{p.roleCustom || formatRole(p)}</div>
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
+
+          <div className="spec-cta-row">
+            <p>Are you a professional studios should know about?</p>
+            <Link href="/submit">List Your Profile →</Link>
+          </div>
         </div>
       </section>
 
       {/* LEARN WITH AS */}
-      <section id="learn" style={{background: 'var(--black)'}}>
+      <section id="learn">
         <div className="wrap">
           <div className="section-head">
             <div>
@@ -245,6 +279,26 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      {/* RECENTLY PUBLISHED — auto-sorted by publish date, newest first, no curation needed */}
+      {recentPosts.length > 0 && (
+        <section id="recent">
+          <div className="wrap">
+            <div className="section-head">
+              <div>
+                <div className="eyebrow-dot"><span className="dot" /><h2>Recently Published</h2></div>
+                <p className="section-lede">Fresh off the press — newest projects first.</p>
+              </div>
+              <Link className="view-all" href="/projects">View all</Link>
+            </div>
+            <div className="pub-grid-4">
+              {recentPosts.map((p) => (
+                <PublicationCard key={p.slug} post={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* PEOPLE MAKE PLACES (static stats band) */}
       <section id="community-band">
@@ -282,7 +336,7 @@ export default async function HomePage() {
               <nav>
                 <Link href="/projects">Projects</Link>
                 <Link href="/learn">Learn</Link>
-                <Link href="/#community">Community</Link>
+                <Link href="/community">Community</Link>
               </nav>
               <div className="socials">
                 <a href="#">◎</a>

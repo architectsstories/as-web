@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {useClient, useDocumentOperation, useFormValue} from 'sanity'
+import {useClient, useDocumentOperation, useEditState, useFormValue} from 'sanity'
 import type {InputProps} from 'sanity'
 import {Box, Button, Card, Flex, Text} from '@sanity/ui'
 
@@ -20,18 +20,21 @@ function newDraftId(prefix: string) {
 // rather than saving an invalid value.
 const PROJECT_CATEGORIES = ['Residential', 'Institutional', 'Hospitality', 'Commercial', 'Interior', 'Landscape']
 
-// Same shape as JoinApprovalPanel — two always-visible, independent
-// buttons instead of one that swaps with Publish. See that file for the
-// full reasoning.
+// Same two-step gate as JoinApprovalPanel: set Status → Completed, click
+// Publish, and only once this submission is genuinely PUBLISHED as
+// Completed does "Create Draft Project" appear at all. See that file for
+// the full reasoning.
 export function SubmissionApprovalPanel(props: InputProps) {
   const doc = useFormValue([]) as any
   const client = useClient({apiVersion: '2024-01-01'})
   const baseId = String(doc?._id || '').replace(/^drafts\./, '')
   const {publish} = useDocumentOperation(baseId, 'submission')
+  const {published} = useEditState(baseId, 'submission')
   const [isRunning, setIsRunning] = useState(false)
   const [error, setError] = useState('')
 
-  const alreadySent = doc?.projectCreated === true
+  const isPublishedCompleted = (published as any)?.status === 'Completed'
+  const alreadySent = (published as any)?.projectCreated === true
 
   async function handleCreateProject() {
     setIsRunning(true)
@@ -76,8 +79,10 @@ export function SubmissionApprovalPanel(props: InputProps) {
           : undefined,
       })
 
-      await client.patch(`drafts.${baseId}`).set({status: 'Completed', projectCreated: true}).commit({autoGenerateArrayKeys: true}).catch(() => {})
-      await client.patch(baseId).set({status: 'Completed', projectCreated: true}).commit({autoGenerateArrayKeys: true}).catch(() => {})
+      // Flip the tracking flag on both draft and published copies, and
+      // publish, so nothing is left as an unpublished edit afterward.
+      await client.patch(`drafts.${baseId}`).set({projectCreated: true}).commit({autoGenerateArrayKeys: true}).catch(() => {})
+      await client.patch(baseId).set({projectCreated: true}).commit({autoGenerateArrayKeys: true}).catch(() => {})
       publish.execute()
     } catch (err) {
       console.error('Failed to create project from submission:', err)
@@ -97,21 +102,30 @@ export function SubmissionApprovalPanel(props: InputProps) {
           disabled={Boolean(publish.disabled)}
           onClick={() => publish.execute()}
         />
-        <Button
-          text={isRunning ? 'Sending…' : alreadySent ? 'Already Sent to Projects ✓' : 'Create Draft Project'}
-          tone={alreadySent ? 'positive' : 'primary'}
-          disabled={isRunning || alreadySent}
-          onClick={handleCreateProject}
-        />
+        {isPublishedCompleted && (
+          <Button
+            text={isRunning ? 'Sending…' : alreadySent ? 'Already Sent to Projects ✓' : 'Create Draft Project'}
+            tone={alreadySent ? 'positive' : 'primary'}
+            disabled={isRunning || alreadySent}
+            onClick={handleCreateProject}
+          />
+        )}
       </Flex>
       <Box marginTop={3}>
-        <Text size={1} muted>
-          <strong>Publish</strong> just saves this submission as-is.{' '}
-          <strong>Create Draft Project</strong> maps its fields onto a new draft Project
-          and publishes this submission as Completed, in one click. That draft has no
-          Main Image yet — pull the real photos from the Drive link above, then publish
-          it from Projects.
-        </Text>
+        {isPublishedCompleted ? (
+          <Text size={1} muted>
+            <strong>Create Draft Project</strong> maps this (already-published, Completed)
+            submission's fields onto a new draft Project. That draft has no Main Image
+            yet — pull the real photos from the Drive link above, then publish it from
+            Projects.
+          </Text>
+        ) : (
+          <Text size={1} muted>
+            Set Status to Completed above, then click <strong>Publish</strong> — once
+            this submission is actually published as Completed, a{' '}
+            <strong>Create Draft Project</strong> button appears here.
+          </Text>
+        )}
       </Box>
       {error && (
         <Box marginTop={2}>

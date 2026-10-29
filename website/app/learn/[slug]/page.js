@@ -92,41 +92,27 @@ export default async function CourseDetailPage({ params }) {
         </div>
       )}
 
+      {course.benefits?.length > 0 && (
+        <div className="course-block">
+          <h2>Course Benefits</h2>
+          <ul className="benefit-list">
+            {course.benefits.map((b, i) => (
+              <li key={i}><span aria-hidden="true">✓</span>{b}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-      {(course.benefits?.length > 0 || course.tools?.length > 0) && (
-        <section className="course-extra-section">
-          {course.benefits?.length > 0 && (
-            <div className="course-benefits-block">
-              <div className="course-extra-heading">
-                <span>01</span>
-                <h2>Course Benefits</h2>
-              </div>
-              <div className="course-benefits-grid">
-                {course.benefits.map((benefit, i) => (
-                  <div key={i} className="course-benefit-item">
-                    <span className="course-benefit-index">{String(i + 1).padStart(2, '0')}</span>
-                    <span>{benefit}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {course.tools?.length > 0 && (
-            <div className="course-tools-block">
-              <div className="course-extra-heading">
-                <span>02</span>
-                <h2>Course Outcome</h2>
-              </div>
-              <div className="course-tools-label">Tools</div>
-              <div className="course-tools-list">
-                {course.tools.map((tool, i) => (
-                  <span key={i} className="course-tool-pill">{tool}</span>
-                ))}
-              </div>
-            </div>
-          )}
-        </section>
+      {course.tools?.length > 0 && (
+        <div className="course-block">
+          <h2>Course Outcome</h2>
+          <div className="outcome-panel">
+            <span className="cat">Tools</span>
+            <ul className="tool-chips">
+              {course.tools.map((t, i) => <li key={i}>{t}</li>)}
+            </ul>
+          </div>
+        </div>
       )}
 
       {course.instructor && (

@@ -60,28 +60,29 @@ npm run dev
 ## What's live right now
 
 > No setup needed for the two automations below (Join → Person,
-> Submission → Project) — they're pure Admin Panel behavior: two plain
-> buttons, always both visible, no menu or status-dependent swapping to
-> figure out. Full explanation in `admin/README.md` under "The approve →
-> draft → review → publish pattern."
+> Submission → Project) — they're pure Admin Panel behavior, gated so
+> nothing gets created by accident: set the right Status, publish it, and
+> only then does the next button appear. Full explanation in
+> `admin/README.md` under "The approve → draft → review → publish
+> pattern."
 
-- **`/submit`** — Submit Your Work form → creates a `submission` doc. A
-  small panel on that document has two buttons: **Publish** (saves it
-  as-is) and **Create Draft Project** (maps its fields onto a new
-  `project` document **as a draft**, and publishes the submission as
-  Completed). That draft has no Main Image yet (forms never collect
-  uploaded files, only a Drive link) — pull the photos from the Drive
-  link, add a Main Image + Gallery, then publish from Projects.
+- **`/submit`** — Submit Your Work form → creates a `submission` doc. Set
+  **Status → Completed** and click **Publish** — only once that's
+  genuinely published does a **Create Draft Project** button appear,
+  which maps the submission's fields onto a new `project` document **as a
+  draft**. That draft has no Main Image yet (forms never collect uploaded
+  files, only a Drive link) — pull the photos from the Drive link, add a
+  Main Image + Gallery, then publish from Projects.
 - **`/plans`** — Featuring & Promotion Plans (static pricing page)
 - **`/join`** — Join AS community application → creates a `joinApplication`
   doc. Asks for name, email, mobile (optional), role, and — only when role
   is **Architect** — a **COA number** (Council of Architecture
   registration). Also accepts an optional photo upload.
-  - Same two-button panel: **Publish**, and **Approve & Add to
-    Community** — the latter creates a matching `person` document **as a
-    draft**, carrying across their mobile, photo, and COA number, and
-    publishes the application as Approved. The new Person doesn't go live
-    until you open it in People and publish it yourself.
+  - Set **Status → Approved** and click **Publish** — only once that's
+    genuinely published does an **Approve & Add to Community** button
+    appear, which creates a matching `person` document **as a draft**,
+    carrying across their mobile, photo, and COA number. The new Person
+    doesn't go live until you open it in People and publish it yourself.
   - If a COA number was given, that new Person is automatically prefixed
     **"Ar."** in their name (skipped if they already typed it themselves),
     and gets a small **blue verified badge** next to their name everywhere

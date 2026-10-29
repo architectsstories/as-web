@@ -112,9 +112,16 @@ export default defineType({
       of: [{type: 'block'}],
     }),
     defineField({
+      name: 'outcomes',
+      title: "What You'll Learn",
+      type: 'array',
+      group: 'content',
+      of: [{type: 'string'}],
+    }),
+    defineField({
       name: 'benefits',
       title: 'Course Benefits',
-      description: 'Benefits included with the course. Add, remove, or reorder items as needed.',
+      description: 'One benefit per item. Shown as the "Course Benefits" list on the course page. Leave empty to hide the section.',
       type: 'array',
       group: 'content',
       of: [{type: 'string'}],
@@ -122,17 +129,11 @@ export default defineType({
     defineField({
       name: 'tools',
       title: 'Course Outcome — Tools',
-      description: 'Tools covered or used in the course.',
+      description: 'Software and tools covered, e.g. D5 Render, SketchUp / Revit, Photoshop, AI Tools. Shown under "Course Outcome" on the course page. Leave empty to hide the section.',
       type: 'array',
       group: 'content',
       of: [{type: 'string'}],
-    }),
-    defineField({
-      name: 'outcomes',
-      title: "What You'll Learn",
-      type: 'array',
-      group: 'content',
-      of: [{type: 'string'}],
+      options: {layout: 'tags'},
     }),
     defineField({
       name: 'curriculum',

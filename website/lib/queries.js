@@ -10,7 +10,9 @@ export const homepageQuery = `*[_type == "featured"][0]{
   featuredProjects[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
   "latestProjects": latestStories[]->{title, "slug": slug.current, studio, location, category, area, year, mainImage},
   featuredCourses[]->{title, "slug": slug.current, category, thumbnail, price, isFree, "instructor": select(instructor && instructor->isEnabled != false => instructor->{name})},
-  featuredPeople[@->isEnabled != false]->{name, role, roleSecondary, roleCustom, location, photo, coaNumber}
+  featuredPeople[@->isEnabled != false]->{name, role, roleSecondary, roleCustom, location, photo, coaNumber},
+  featuredVendors[@->isEnabled != false]->{name, "slug": slug.current, role, roleSecondary, roleCustom, location, photo, bio, coaNumber},
+  featuredIndustryProfessionals[@->isEnabled != false]->{name, "slug": slug.current, role, roleSecondary, roleCustom, location, photo, bio, coaNumber}
 }`
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -54,7 +56,7 @@ export const allCoursesQuery = `*[_type == "course"] | order(_createdAt desc){
 }`
 
 export const courseBySlugQuery = `*[_type == "course" && slug.current == $slug][0]{
-  title, category, thumbnail, bannerImage, price, isFree, level, duration, description, benefits, tools, outcomes, curriculum, ctaText, ctaLink,
+  title, category, thumbnail, bannerImage, price, isFree, level, duration, description, outcomes, benefits, tools, curriculum, ctaText, ctaLink,
   "instructor": select(instructor && instructor->isEnabled != false => instructor->{name, role, roleSecondary, roleCustom, location, photo, bio, portfolioUrl, coaNumber})
 }`
 

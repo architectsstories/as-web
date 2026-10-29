@@ -20,8 +20,8 @@ project. There's nothing to swap out before running this.
 | Module        | How it's implemented                                              |
 |----------------|---------------------------------------------------------------------|
 | Dashboard      | `@sanity/dashboard` plugin — overview widgets                       |
-| **Join Applications** | `joinApplication` schema — every "Join AS" entry from `/join`: name, email, mobile (optional), role, an optional photo, and — only relevant when Role is "Architect" — a **COA number** (hidden in the Studio form for any other role). Has two always-visible buttons — Publish, and **Approve & Add to Community** — see "The approve → draft → review → publish pattern" below. If a COA number was given, the new Person's name is prefixed **"Ar."** (skipped if already present) |
-| **Work Submissions** | `submission` schema — every "Submit Your Work" entry from `/submit`, sorted newest first, with a `status` field (New → Reviewed → Confirmed → Completed/Declined) for triage. Has the same two-button panel — Publish, and **Create Draft Project**. That draft has no Main Image yet — a submission only ever has a Drive link, never an uploaded file — so it can't be published until someone opens it, pulls the real photos from that Drive link, adds a Main Image (required) and Gallery, and publishes from Projects |
+| **Join Applications** | `joinApplication` schema — every "Join AS" entry from `/join`: name, email, mobile (optional), role, an optional photo, and — only relevant when Role is "Architect" — a **COA number** (hidden in the Studio form for any other role). Set Status to Approved and publish it, and an **Approve & Add to Community** button appears — see "The approve → draft → review → publish pattern" below. If a COA number was given, the new Person's name is prefixed **"Ar."** (skipped if already present) |
+| **Work Submissions** | `submission` schema — every "Submit Your Work" entry from `/submit`, sorted newest first, with a `status` field (New → Reviewed → Confirmed → Completed/Declined) for triage. Same pattern: set Status to Completed and publish it, and a **Create Draft Project** button appears. That draft has no Main Image yet — a submission only ever has a Drive link, never an uploaded file — so it can't be published until someone opens it, pulls the real photos from that Drive link, adds a Main Image (required) and Gallery, and publishes from Projects |
 | **Course Enrollments** | `enrollment` schema — every "Join Now" popup entry from a course page (`/courses/[slug]`), sorted newest first, with its own `status` field (New → Contacted → Enrolled → Declined). The popup itself lives in `website/components/EnrollButton.js` (name, email, phone, message) → `website/app/api/enroll/route.js` |
 | Projects       | `project` schema (title, studio, location, category, gallery, `viewCount`, `showInLatestStories`...). The public `/stories` pages are just Projects with that last toggle on — there's no separate content type behind them |
 | Courses        | `course` schema (title, instructor, curriculum modules, price, optional `ctaText`/`ctaLink` to point "Join Now" at an external link instead of the built-in popup) |
@@ -43,49 +43,45 @@ regular attention.
 
 ## The "approve → draft → review → publish" pattern
 
-**Two plain buttons, always both visible, side by side — no menu, no
-swapping, no toggle to puzzle over.**
+**A strict two-step gate: nothing is created until the Approved/Completed
+status is genuinely published — not just selected.**
 
 Both `joinApplication` and `submission` documents have a small panel
-further down the form (where a plain on/off toggle used to be) with two
-real buttons in it:
+further down the form (where a plain on/off toggle used to be):
 
-| Document | Left button | Right button |
-|---|---|---|
-| Join Application | **Publish** — saves the application as-is | **Approve & Add to Community** — creates a draft Person, publishes the application as Approved |
-| Work Submission | **Publish** — saves the submission as-is | **Create Draft Project** — creates a draft Project, publishes the submission as Completed |
+1. Set **Status → Approved** (Join Applications) or **Status → Completed**
+   (Work Submissions). At this point only **Publish** is shown, and it's
+   now enabled since there's a change to save — this is just Sanity's
+   normal Publish behavior, no custom logic involved.
+2. Click **Publish**. This saves Status as the document's actual
+   published state.
+3. Only now does a second button appear — **"Approve & Add to
+   Community"** or **"Create Draft Project"**. It genuinely was not there
+   a moment ago; the panel checks the real *published* document, not just
+   what's currently selected in the form, so there's no way to trigger
+   this by selecting Approved/Completed without actually publishing it
+   first.
+4. Click it, and it creates the new document **as a draft** (its `_id` is
+   prefixed `drafts.`) in People or Projects.
+5. That new draft is not live yet. Open it, fill in whatever the form
+   couldn't capture (a Person doesn't need anything extra; a Project needs
+   a Main Image at minimum, since forms never collect an uploaded file —
+   only a Drive link), and hit **Publish** on *that* document too when
+   it's ready.
 
-That's the whole interaction:
-
-1. Someone fills out a public form (`/join` or `/submit`).
-2. You open their entry, review it, and either:
-   - Click **Publish** if you just want to save changes without deciding
-     yet (add a note, fix a typo, whatever) — behaves exactly like the
-     Publish button anywhere else in Sanity.
-   - Click **Approve & Add to Community** / **Create Draft Project** when
-     you're ready to move them forward. This one click does three things:
-     creates the new document **as a draft** (its `_id` is prefixed
-     `drafts.`), sets Status to Approved/Completed, and publishes the
-     application/submission itself — all in one action.
-3. That new draft is not live yet. Open it in People or Projects, fill in
-   whatever the form couldn't capture (a Person doesn't need anything
-   extra; a Project needs a Main Image at minimum, since forms never
-   collect an uploaded file — only a Drive link), and hit **Publish** on
-   *that* document too when it's ready.
-
-Only that second, separate Publish (step 3) makes it appear on the
+Only that second, separate Publish (step 5) makes it appear on the
 website — nothing from a public form ever goes live without a human
 looking at it first.
 
-Once the right-hand button has run, it turns into a plain confirmation —
+Once step 4 has run, the button turns into a plain confirmation —
 **"Already Added to Community ✓"** / **"Already Sent to Projects ✓"** —
 and disables itself, so clicking around afterward can't create a second,
-duplicate draft. The left-hand Publish button is completely unaffected by
-this and keeps working normally regardless.
+duplicate draft.
 
-Both buttons are always there, regardless of what Status is currently set
-to — there's nothing conditional to figure out, and nothing hidden in the
-Studio's "···" menu, a dropdown, or anywhere else.
+If you ever change Status away from Approved/Completed and republish, the
+second button disappears again (since the published document no longer
+matches), and reappears if you set it back and republish — it always
+reflects the current published truth, live.
 
 ## The verified badge, in full
 

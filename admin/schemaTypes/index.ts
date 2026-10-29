@@ -7,5 +7,8 @@ import siteSettings from './siteSettings'
 import joinApplication from './joinApplication'
 import submission from './submission'
 import enrollment from './enrollment'
+import architectFirm from './architectFirm'
+import vendorBrand from './vendorBrand'
+import industryProfessional from './industryProfessional'
 
-export const schemaTypes = [project, course, event, person, featured, siteSettings, joinApplication, submission, enrollment]
+export const schemaTypes = [project, course, event, person, architectFirm, vendorBrand, industryProfessional, featured, siteSettings, joinApplication, submission, enrollment]

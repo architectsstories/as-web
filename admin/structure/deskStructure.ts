@@ -28,9 +28,24 @@ export const deskStructure: StructureResolver = (S) =>
         .child(S.documentTypeList('event').title('Events')),
 
       S.listItem()
+        .title('Architects & Firms')
+        .schemaType('architectFirm')
+        .child(S.documentTypeList('architectFirm').title('Architects & Firms')),
+
+      S.listItem()
+        .title('Vendors & Brands')
+        .schemaType('vendorBrand')
+        .child(S.documentTypeList('vendorBrand').title('Vendors & Brands')),
+
+      S.listItem()
+        .title('Industry Professionals')
+        .schemaType('industryProfessional')
+        .child(S.documentTypeList('industryProfessional').title('Industry Professionals')),
+
+      S.listItem()
         .title('People')
         .schemaType('person')
-        .child(S.documentTypeList('person').title('People (Instructors & Community)')),
+        .child(S.documentTypeList('person').title('People (Community)')),
 
       S.divider(),
 

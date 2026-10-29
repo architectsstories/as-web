@@ -58,6 +58,38 @@ export default defineType({
       of: [{type: 'reference', to: [{type: 'person'}]}],
       validation: (Rule) => Rule.max(4),
     }),
+    defineField({
+      name: 'featuredVendors',
+      title: 'Vendors & Brands',
+      type: 'array',
+      description: 'Pick which Material Brand profiles show in the homepage "Featured Vendors & Brands" section. The first one picked is the spotlight ("Featured Brand of the Month"); up to 4 more appear in the grid beside it. Only people with Role — Primary or Secondary set to "Material Brand" can be picked.',
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'person'}],
+          options: {
+            filter: 'role == "Material Brand" || roleSecondary == "Material Brand"',
+          },
+        },
+      ],
+      validation: (Rule) => Rule.max(5),
+    }),
+    defineField({
+      name: 'featuredIndustryProfessionals',
+      title: 'Industry Professionals',
+      type: 'array',
+      description: 'Pick which people show in the homepage "Industry Professionals" section — visualisers, photographers, consultants, contractors, fabricators, landscape designers, etc. The first one picked is the spotlight ("Featured Professional of the Month"); up to 4 more appear in the grid beside it. Material Brands are excluded — use the "Vendors & Brands" section above for them.',
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'person'}],
+          options: {
+            filter: 'role != "Material Brand" && roleSecondary != "Material Brand"',
+          },
+        },
+      ],
+      validation: (Rule) => Rule.max(5),
+    }),
   ],
   preview: {
     prepare() {

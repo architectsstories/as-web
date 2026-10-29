@@ -12,8 +12,9 @@ export default async function ProjectsPage() {
     <div className="wrap">
       <div className="crumb"><Link href="/">Home</Link><span>/</span><span style={{color:'var(--black)'}}>Projects</span></div>
       <section style={{paddingTop: 0}}>
-        <div className="section-head">
+        <div className="section-head has-btn">
           <div className="eyebrow-dot"><span className="dot" /><h2>All Projects</h2></div>
+          <Link className="head-btn" href="/submit">Get Featured →</Link>
         </div>
         {projects.length === 0 ? (
           <div className="empty-state">No projects published yet. Add one in the Admin Panel.</div>
